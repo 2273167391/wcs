@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.RechargeNotesMapper">
+	<!-- 添加字段 -->
+	<sql id="addColumn">
+		recharge_id,serial_number,magcard_id,recharge_money,balance,remarks,is_expend,version,creation_by,creation_date
+	</sql>
+	
+	<!-- 所有字段 -->
+	<sql id="allColumn">
+		<include refid="addColumn"/>,last_update_by,last_update_date
+	</sql>
+	
+	<!-- 表名 -->
+	<sql id="tableName">wcs_cost_recharge_notes</sql>
+	
+	<!-- 添加充值记录 -->
+	<insert id="addRechargeNotes" parameterType="rechargeNotes">
+		insert into <include refid="tableName"/>(<include refid="addColumn"/>)
+		values(wcs_cost_recharge_notes_s.nextval,#{serialNumber},#{magcardId},#{rechargeMoney},#{balance},
+		<choose>
+			<when test="remarks!=null and remarks!=''">#{remarks}</when>
+			<otherwise>null</otherwise>
+		</choose>
+		,#{isExpend},#{version},#{creationBy},#{creationDate})
+	</insert>
+	
+	<!-- 删除充值记录 -->
+	<delete id="deleteRechargeNotes" parameterType="int">
+		delete from <include refid="tableName"/> where recharge_id=#{rechargeId}
+	</delete>
+	
+	<!-- 根据磁卡ID删除记录 -->
+	<delete id="deleteRechargeNotesByMagcardId" parameterType="int">
+		delete from <include refid="tableName"/> where magcard_id=#{magcardId}
+	</delete>
+</mapper>

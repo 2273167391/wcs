@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.view.MenusVMapper">
+	<!-- 结果集 -->
+	<resultMap type="menusV" id="MenusV">
+		<id column="menu_id" property="menuId"/>
+		<result column="menu_name" property="menuName"/>
+		<result column="menu_parent_id" property="menuParentId"/>
+		<result column="menu_parent_name" property="menuParentName"/>
+		<result column="menu_url" property="menuUrl"/>
+		<result column="menu_level" property="menuLevel"/>
+		<result column="remarks" property="remarks"/>
+	</resultMap>
+	
+	<!-- 所有列 -->
+	<sql id="allCoumn">
+		menu_id,menu_name,menu_parent_id,menu_parent_name,menu_url,menu_level,remarks
+	</sql>
+	
+	<!-- 视图名 -->
+	<sql id="viewName">wcs_sys_menus_v</sql>
+	
+	<!-- 根据菜单ID获取菜单信息 -->
+	<select id="queryMenusVById" parameterType="int" resultMap="MenusV">
+		select <include refid="allCoumn"/> from <include refid="viewName"/>
+		<where>menu_id=#{menuId}</where>
+	</select>
+</mapper>

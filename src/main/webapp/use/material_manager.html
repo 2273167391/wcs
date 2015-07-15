@@ -1,0 +1,80 @@
+<div class="easyui-layout" data-options="fit:true">
+	<div data-options="region:'north',border:false">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'north',border:false" style="text-align:right;padding:2px 10px 0px 0px">
+				<a href="javascript:queryMaterial()" data-options="iconCls:'icon-search',plain:true" class="easyui-linkbutton">查询</a>
+				<a href="javascript:addMaterial()" data-options="iconCls:'icon-add',plain:true" class="easyui-linkbutton">新增</a>
+				<a href="#" onclick="updateMaterial()" id="update_material" data-options="iconCls:'icon-edit',plain:true" class="easyui-linkbutton">编辑</a>
+				<a href="#" onclick="deleteMaterial()" id="dele_material" data-options="iconCls:'icon-cancel',plain:true" class="easyui-linkbutton">删除</a>
+			</div>
+			<div data-options="region:'center',border:false" style="border-top:1px solid #d3d3d3;padding:10px 10px;">
+				<form id="wcs_material_search_form" method="post">
+					<table style="width: 100%" >
+						<tr>
+							<td align="right">用户：</td>
+							<td><select class="easyui-combobox wcs_user" style="width:200px;height:25px;" name="userId"></select></td>
+							<td align="right">材料：</td>
+							<td><select class="easyui-combobox wcs_material" style="width:200px;height:25px;" name="materialCode"></select></td>
+							<td align="right">单价：</td>
+							<td><input type="text" class="easyui-numberbox" data-options="min:0" name="price"/></td>
+							<td align="right">到：</td>
+							<td><input type="text" class="easyui-numberbox" data-options="min:0" name="endPrice"/></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div data-options="region:'center',border:false" style="border-top:1px solid #d3d3d3">
+		<table class="easyui-datagrid wcs_material_list" data-options="rownumbers:true,
+                    singleSelect:true,
+                    autoRowHeight:false,
+                    fitColumns:true,
+                    striped:true,
+                    pagination:true,
+                    pageSize:30,fit:true,border:false">
+            <thead>
+           <tr>
+           		<th data-options="filed:'materialId',hidden:true">材料ID</th>
+           		<th data-options="field:'materialName',halign:'center'" width="10%">材料名称</th>
+                <th data-options="field:'userName',halign:'center'" width="10%">用户</th>
+                <th data-options="field:'price',halign:'center'" width="10%">单价</th>
+                <th data-options="field:'numbers',halign:'center'" width="10%">数量</th>
+                <th data-options="field:'amount',halign:'center'" width="10%">金额</th>
+                <th data-options="field:'creationDate',halign:'center'" width="10%">添加时间</th>
+                <th data-options="field:'remarks',halign:'center'" width="10%">备注</th>
+            </tr>
+            </thead>
+        </table>
+	</div>
+</div>
+<!-- 保存材料窗口 -->
+<div id="wcs_save_material_win">
+	<form class="wcs_save_material_form" method="post">
+		<div class="wcs_form_block">
+			<label>材料名称：</label>
+			<input type="hidden" name="materialId"/>
+			<select class="easyui-combobox wcs_material" style="width:200px;height:25px;" name="materialCode" required="required"></select>
+		</div>
+		<div class="wcs_form_block">
+			<label>用户：</label>
+			<select class="easyui-combobox wcs_user" style="width:200px;height:25px;" name="userId" required="required"></select>
+		</div>
+		<div class="wcs_form_block">
+			<label>单价：</label>
+			<input type="text" class="easyui-validatebox easyui-numberbox" data-options="min:0,precision:2"  name="price" required="required"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>数量：</label>
+			<input type="text" class="easyui-validatebox easyui-numberbox" data-options="min:0" name="numbers" required="required"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>备注：</label>
+			<textarea rows="3" cols="40" name="remarks"></textarea>
+		</div>
+	</form>
+</div>
+<script type="text/javascript" src="../resources/js/use/material_manager.js"></script>
+<script type="text/javascript">
+	loadPage();
+</script>

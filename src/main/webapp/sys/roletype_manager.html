@@ -1,0 +1,50 @@
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'west',border:false" style="width:600px" class="wcs_main_content">
+    	<table id="wcs_roletype_list" class="easyui-datagrid" data-options="rownumbers:true,
+                    singleSelect:true,
+                    autoRowHeight:false,
+                    fitColumns:true,
+                    striped:true,
+                    pagination:true,
+                    pageSize:30,toolbar:roletypeToolBar,fit:true">
+            <thead>
+           <tr>
+           		<th data-options="field:'roleTypeId',hidden:true">角色类型ID</th>
+                <th data-options="field:'roleTypeCode',halign:'center'" width="10%">角色类型编码</th>
+                <th data-options="field:'roleTypeName',halign:'center'" width="10%">角色类型名称</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    
+    <div data-options="region:'center',border:false" class="wcs_main_content">
+        <table id="wcs_roletype_role_list" class="easyui-datagrid" data-options="rownumbers:true,
+                    singleSelect:true,
+                    autoRowHeight:false,
+                    fitColumns:true,
+                    striped:true,
+                    pagination:true,
+                    pageSize:30,fit:true">
+            <thead>
+            <tr>
+            	<th data-options="field:'roleId',hidden:true">角色ID</th>
+                <th data-options="field:'roleName',halign:'center'" width="10%">角色名称</th>
+                <th data-options="field:'roleTypeName',halign:'center'" width="10%">角色类型</th>
+                <th data-options="field:'description',halign:'center'" width="10%">描述</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<!-- 添加/编辑角色类型 -->
+<div id="wcs_handler_roletype">
+	<form id="wcs_roletype_form" method="post">
+		<div class="wcs_form_block">
+			<label>类型名称：</label>
+			<input type="hidden" value="0" name="roleTypeId"/>
+			<input type="text" class="easyui-validatebox" name="roleTypeName" data-options="required:true"/>
+		</div>
+	</form>
+</div>
+<script type="text/javascript" src="../resources/js/sys/roletype_manager.js"></script>

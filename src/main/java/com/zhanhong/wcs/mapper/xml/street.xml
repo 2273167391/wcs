@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.StreetMapper">
+	<!-- 结果集 -->
+	<resultMap type="street" id="Street">
+		<id column="street_id" property="streetId"/>
+		<result column="street_code" property="streetCode"/>
+		<result column="street_name" property="streetName"/>
+		<result column="version" property="version"/>
+		<result column="creation_by" property="creationBy"/>
+		<result column="creation_date" property="creationDate"/>
+		<result column="last_update_by" property="lastUpdateBy"/>
+		<result column="last_update_date" property="lastUpdateDate"/>
+	</resultMap>
+
+	<!-- 添加字段 -->
+	<sql id="addColumn">
+		street_id,street_code,street_name,version,creation_by,creation_date
+	</sql>
+	
+	<!-- 所有字段 -->
+	<sql id="allColumn">
+		<include refid="addColumn"/>,last_update_by,last_update_date
+	</sql>
+	
+	<!-- 表名 -->
+	<sql id="tableName">wcs_sys_street</sql>
+	
+	<!-- 添加街道 -->
+	<insert id="addStreet" parameterType="street">
+		insert into <include refid="tableName"/>(<include refid="addColumn"/>)
+		values(wcs_sys_street_s.nextval,#{streetCode},#{streetName},#{version},#{creationBy},#{creationDate})
+	</insert>
+	
+	<!-- 修改街道 -->
+	<update id="updateStreet" parameterType="street">
+		update <include refid="tableName"/>
+		<set>
+			<if test="streetName!=null">
+				street_name=#{streetName}
+			</if>
+			,last_update_by=#{lastUpdateBy},last_update_date=#{lastUpdateDate} 
+		</set>
+		<where>
+			street_id=#{streetId}
+		</where>
+	</update>
+	
+	<!-- 删除街道 -->
+	<delete id="deleteStreet" parameterType="int">
+		delete from <include refid="tableName"/> where street_id=#{streetId}
+	</delete>
+	
+	<!-- 根据街道名称查询街道信息 -->
+	<select id="queryStreetByName" resultMap="Street" parameterType="String">
+		select <include refid="allColumn"/> from <include refid="tableName"/> 
+		<where>street_name=#{streetName}</where>
+	</select>
+	
+	<!-- 查询街道信息 -->
+	<select id="queryStreetAll" resultMap="Street" parameterType="street">
+		select <include refid="allColumn"/> from <include refid="tableName"/> 
+		<where>1=1
+			<if test="streetCode!=null and streetCode!=''">
+				and street_code like #{streetCode}
+			</if>
+			<if test="streetName!=null and streetName!=''">
+				and street_name like #{streetName}
+			</if>
+		</where>
+		order by creation_date desc
+	</select>
+</mapper>

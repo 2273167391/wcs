@@ -1,0 +1,136 @@
+<div class="easyui-layout" data-options="fit:true">
+	<div data-options="region:'north',border:false">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'north',border:false" style="text-align:right;padding:2px 10px 0px 0px">
+				<a href="javascript:queryWaterMeter()"  data-options="iconCls:'icon-search',plain:true" class="easyui-linkbutton">查询</a>
+				<a href="javascript:addWaterMeter()" data-options="iconCls:'icon-add',plain:true" class="easyui-linkbutton">新增</a>
+				<a href="#" onclick="installWaterMeter()" id="meter_install" data-options="iconCls:'icon-edit',plain:true" class="easyui-linkbutton">安装</a>
+				<!-- <a href="#" onclick="startOrEndWaterMeter('W006002')" id="meter_start" data-options="iconCls:'icon-edit',plain:true" class="easyui-linkbutton">启用</a> -->
+				<a href="#" onclick="startOrEndWaterMeter('W006003')" id="meter_end" data-options="iconCls:'icon-edit',plain:true" class="easyui-linkbutton">停用</a>
+				<a href="#" onclick="deleteMeter()" id="meter_del" data-options="iconCls:'icon-cancel',plain:true" class="easyui-linkbutton">删除</a>
+			</div>
+			<div data-options="region:'center',border:false" style="border-top:1px solid #d3d3d3;padding:10px 10px;">
+				<form id="wcs_meter_search_form" method="post">
+					<table style="width: 100%" >
+						<tr>
+							<td align="right">用户：</td>
+							<td><select class="easyui-combobox wcs_user" style="width:200px;height:25px;" name="userId"></select></td>
+							<td align="right">安装人员：</td>
+							<td><select class="easyui-combobox wcs_handler" style="width:200px;height:25px;" name="empId"></select></td>
+							<td align="right">水表编码：</td>
+							<td><input type="text" name="waterMeterCode"/></td>
+							<td align="right">是否换表：</td>
+							<td><select class="easyui-combobox wcs_is_change_meter" style="width:200px;height:25px;" name="isChangeMeter"></select></td>
+						</tr>
+						<tr>
+							<td align="right">预约安装日期：</td>
+							<td><input type="text" id="install_date_s" class="easyui-datebox" name="appointmentInstallDate"/></td>
+							<td align="right">到：</td>
+							<td><input type="text" id="install_date_e" class="easyui-datebox" name="endAppointmentInstallDate"/></td>
+							<td align="right">安装日期：</td>
+							<td><input type="text" id="execute_date_s" class="easyui-datebox" name="installDate"/></td>
+							<td align="right">到：</td>
+							<td><input type="text" id="execute_date_e" class="easyui-datebox" name="endInstallDate"/></td>
+						</tr>
+						<tr>
+							<td align="right">换表日期：</td>
+							<td><input type="text" id="change_s" class="easyui-datebox" name="changeMeterDate"/></td>
+							<td align="right">到：</td>
+							<td><input type="text" id="change_e" class="easyui-datebox" name="endChangeMeterDate"/></td>
+							<td align="right">是否安装：</td>
+							<td><select class="easyui-combobox wcs_is_execute" style="width:200px;height:25px;" name="isExecute"></select></td>
+							<td align="right">水表状态：</td>
+							<td><select class="easyui-combobox wcs_meter_status" style="width:200px;height:25px;" name="meterStatusCode"></select></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div data-options="region:'center',border:false" style="border-top:1px solid #d3d3d3">
+		<table class="easyui-datagrid wcs_water_meter_list" data-options="rownumbers:true,
+                    singleSelect:true,
+                    autoRowHeight:false,
+                    striped:true,
+                    pagination:true,
+                    pageSize:30,fit:true,border:false">
+            <thead>
+           <tr>
+           		<th data-options="filed:'waterMeterId',hidden:true">水表ID</th>
+           		<th data-options="field:'waterMeterCode',halign:'center'" width="150px">水表编码</th>
+           		<th data-options="field:'meterStatus',halign:'center'" width="100px">水表状态</th>
+                <th data-options="field:'userName',halign:'center'" width="100px">用户</th>
+                <th data-options="field:'homeAddress',halign:'center'" width="300px">用户地址</th>
+                <th data-options="field:'appointmentInstallDate',halign:'center'" width="150px">预约安装日期</th>
+                <th data-options="field:'changeMeterDate',halign:'center'" width="150px">换表日期</th>
+                <th data-options="field:'changeMeterUpNumber',halign:'center'" width="100px">换表起方</th>
+                <th data-options="field:'changeMeterCode',halign:'center'" width="150px">换表水表编码</th>
+                <th data-options="field:'installDate',halign:'center'" width="150px">安装日期</th>
+                <th data-options="field:'empName',halign:'center'" width="100px">安装人员</th>
+                <th data-options="field:'isChangeMeter',halign:'center'" width="100px">是否换表</th>
+                <th data-options="field:'isExecute',halign:'center'" width="100px">是否安装</th>
+            </tr>
+            </thead>
+        </table>
+	</div>
+</div>
+<!-- 保存水表窗口 -->
+<div id="wcs_save_water_meter_win">
+	<form class="wcs_save_water_meter_form" method="post">
+		<div class="wcs_form_block">
+			<label>水表编码：</label>
+			<input type="hidden" name="waterMeterId"/>
+			<input type="text" name="waterMeterCode" readonly="readonly"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>用户：</label>
+			<select class="easyui-combobox wcs_user" style="width:200px;height:25px;" name="userId" required="required"></select>
+		</div>
+		<div class="wcs_form_block">
+			<label>安装人员：</label>
+			<select class="easyui-combobox wcs_handler" style="width:200px;height:25px;" name="empId" required="required"></select>
+		</div>
+		<div class="wcs_form_block">
+			<label>预约安装日期：</label>
+			<input type="text" id="execute_date" class="easyui-datebox" name="appointmentInstallDate" style="width:200px;height:25px;" required="required"/>
+		</div>
+		
+		<div class="wcs_form_block">
+			<label>换表起方：</label>
+			<input type="text" class="easyui-numberbox" data-options="min:0" name="changeMeterUpNumber"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>换表编码：</label>
+			<input type="text" name="changeMeterCode" />
+		</div>
+		<div class="wcs_form_block">
+			<label>换表日期：</label>
+			<input type="text" id="changeDate" class="easyui-datebox" name="changeMeterDate" style="width:200px;height:25px;"/>
+		</div>
+	</form>
+</div>
+<div id="wcs_install_meter">
+	<form class="wcs_install_meter_form" method="post">
+		<div class="wcs_form_block">
+			<label>水表编码：</label>
+			<input type="hidden" name="waterMeterId"/>
+			<input type="text" name="waterMeterCode" readonly="readonly"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>用户：</label>
+			<select class="easyui-combobox wcs_user" style="width:200px;height:25px;" name="userId"></select>
+		</div>
+		<div class="wcs_form_block">
+			<label>安装人员：</label>
+			<select class="easyui-combobox wcs_handler" style="width:200px;height:25px;" name="empId"></select>
+		</div>
+		<div class="wcs_form_block">
+			<label>安装日期：</label>
+			<input type="text" id="execute_date" class="easyui-datebox" name="installDate" style="width:200px;height:25px;" required="required"/>
+		</div>
+	</form>
+</div>
+<script type="text/javascript" src="../resources/js/use/water_meter.js"></script>
+<script type="text/javascript">
+	loadPage();
+</script>

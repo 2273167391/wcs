@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.WaterMeterMapper">
+	<!-- 结果集 -->
+	<resultMap type="waterMeter" id="WaterMeter">
+		<id column="water_meter_id" property="waterMeterId"/>
+		<result column="water_meter_code" property="waterMeterCode"/>
+		<result column="user_id" property="userId"/>
+		<result column="emp_id" property="empId"/>
+		<result column="change_meter_date" property="changeMeterDate"/>
+		<result column="change_meter_up_number" property="changeMeterUpNumber"/>
+		<result column="change_meter_id" property="changeMeterId"/>
+		<result column="appointment_install_date" property="appointmentInstallDate"/>
+		<result column="install_date" property="installDate"/>
+		<result column="meter_status" property="meterStatus"/>
+		<result column="version" property="version"/>
+		<result column="creation_by" property="creationBy"/>
+		<result column="creation_date" property="creationDate"/>
+		<result column="last_update_by" property="lastUpdateBy"/>
+		<result column="last_update_date" property="lastUpdateDate"/>
+	</resultMap>
+
+	<!-- 添加字段 -->
+	<sql id="addColumn">
+		water_meter_id,water_meter_code,user_id,emp_id,change_meter_date,change_meter_up_number,change_meter_code,appointment_install_date,meter_status,version,creation_by,creation_date
+	</sql>
+	
+	<!-- 所有字段 -->
+	<sql id="allColumn">
+		<include refid="addColumn"/>,last_update_by,last_update_date 
+	</sql>
+	
+	<!-- 表名 -->
+	<sql id="tableName">wcs_use_water_meter</sql>
+	
+	<!-- 添加水表 -->
+	<insert id="addWaterMeter" parameterType="waterMeter">
+		insert into <include refid="tableName"/>(<include refid="addColumn"/>)
+		values(wcs_use_water_meter_s.nextval,#{waterMeterCode},#{userId},#{empId},
+		<choose>
+			<when test="changeMeterDate!=null">#{changeMeterDate}</when>
+			<otherwise>null</otherwise>
+		</choose>,
+		<choose>
+			<when test="changeMeterUpNumber!=null">#{changeMeterUpNumber}</when>
+			<otherwise>null</otherwise>
+		</choose>,
+		<choose>
+			<when test="changeMeterCode!=null">#{changeMeterCode}</when>
+			<otherwise>null</otherwise>
+		</choose>
+		,#{appointmentInstallDate},#{meterStatus},#{version},#{creationBy},#{creationDate})
+	</insert>
+	
+	<!-- 修改水表 -->
+	<update id="updateWaterMeter" parameterType="waterMeter">
+		update <include refid="tableName"/>
+		<set>
+			<if test="empId!=null">
+				emp_id=#{empId},
+			</if>
+			<if test="installDate!=null">
+				install_date=#{installDate},
+			</if>
+			<if test="meterStatus!=null and meterStatus!=''">
+				meter_status=#{meterStatus}
+			</if>
+			,last_update_by=#{lastUpdateBy},last_update_date=#{lastUpdateDate}
+		</set>
+		<where>
+			water_meter_id=#{waterMeterId}
+		</where>
+	</update>
+	
+	<!-- 删除水表 -->
+	<delete id="deleteWaterMeter" parameterType="int">
+		delete from <include refid="tableName"/> where water_meter_id=#{waterMeterId}
+	</delete>
+	
+	<!-- 根据编码获取水表 -->
+	<select id="queryWaterMeterByCode" resultMap="WaterMeter" parameterType="String">
+		select <include refid="allColumn"/> from <include refid="tableName"/>
+		<where>water_meter_code=#{waterMeterCode}</where>
+	</select>
+	
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.EmployeeRoleMapper">
+	<!-- 表名 -->
+	<sql id="tableName">wcs_sys_employee_role</sql>
+	<!-- 添加员工角色关系 -->
+	<insert id="addEmployeeRole" parameterType="java.util.Map">
+		insert into <include refid="tableName"/>(emp_id,role_id)
+		values(#{empId},#{roleId})
+	</insert>
+	
+	<!-- 根据员工ID删除关系 -->
+	<delete id="deleteEmployeeRole" parameterType="java.util.Map">
+		delete from <include refid="tableName"/> where emp_id=#{empId} and role_id=#{roleId}
+	</delete>
+	
+	<!-- 根据职员ID查询是否存在角色关联 -->
+	<select id="queryEmpRoleByEmpId" parameterType="int" resultType="int">
+		select count(*) from <include refid="tableName"/>
+		<where>emp_id=#{empId}</where>
+	</select>
+	
+</mapper>

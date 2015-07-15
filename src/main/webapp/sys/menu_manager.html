@@ -1,0 +1,40 @@
+<div class="easyui-layout" data-options="fit:true">
+	<div data-options="region:'west',border:false,width:600" style="border-right:1px solid #D3D3D3">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'north',height:35,border:false" style="text-align: right;padding-top:5px;padding-right:10px;border-bottom:1px solid #d3d3d3">
+				<a class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addMenu()">添加</a>
+				<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="deleteMenu()">删除</a>
+			</div>
+			<div data-options="region:'center',border:false" style="padding:10px;"><ul id="wcs_menu_tree"></ul></div>
+		</div>
+		
+	</div>
+	<div data-options="region:'center',border:false" style="padding:10px">
+		<form id="menu_form" method="post">
+			<div class="wcs_form_block">
+				<label>上级菜单：</label>
+				<input type="hidden" name="menuId" value="0"/>
+				<input type="hidden" name="menuParentId" value="0"/>
+				<input type="text" name="menuParentName" readonly="readonly" class="wcs_readonly"/>
+			</div>
+			<div class="wcs_form_block">
+				<label>菜单名称：</label>
+				<input class="easyui-validatebox"  type="text" name="menuName" data-options="required:true"/>
+			</div>
+			<div class="wcs_form_block">
+				<label>菜单URL：</label>
+				<input type="text" name="menuUrl" />
+			</div>
+			<div class="wcs_form_block">
+				<label>备注：</label>
+				<textarea rows="3" cols="50" name="remarks"></textarea>
+			</div>
+			<div class="wcs_form_block">
+				<label></label>
+				<input type="button" value="保存" onclick="saveMenu()"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script type="text/javascript" src="../resources/js/sys/menu_manager.js"></script>

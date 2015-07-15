@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.BaseCommonMapper">
+	<!-- 数据字典数据集 -->
+	<resultMap type="Map" id="WordBook">
+		<id column="wordbook_code" property="wordBookCode"/>
+		<result column="wordbook_content" property="wordBookContent"/>
+	</resultMap>
+
+	<!-- 生成员工编码 -->
+	<select id="getEmployeeCode" resultType="String">
+		select 'EMP' || lpad(wcs_sys_employee_s1.nextval,4,'0') emp_code from dual
+	</select>
+	
+	<!-- 生成用户编码 -->
+	<select id="getUserCode" resultType="String">
+		select 'USE'||lpad(wcs_use_user_s1.nextval,4,'0') user_code from dual
+	</select>
+	
+	<!-- 生成水表编码 -->
+	<select id="getWaterMeterCode" resultType="String">
+		select 'UWM'||lpad(wcs_use_water_meter_s1.nextval,4,'0') from dual
+	</select>
+	
+	<!-- 根据类型获取数据字典 -->
+	<select id="queryWordBookByCode" resultMap="WordBook" parameterType="string">
+		select wordbook_code,wordbook_content from wcs_sys_wordbook  
+		<where>
+			effective_date&lt;=sysdate and sysdate&lt;=nvl(invalidation_date,sysdate+1) and wordbook_type_code=upper(#{type}) order by wordbook_code
+		</where>
+	</select>
+	
+	<!-- 生成角色类型编码 -->
+	<select id="getRoleTypeCode" resultType="String">
+		select 'RT'||lpad(wcs_sys_roletype_s1.nextval,3,'0') role_code from dual
+	</select>
+	
+	<!-- 生成街道编码 -->
+	<select id="getStreetCode" resultType="String">
+		select 'SST'||lpad(wcs_sys_street_s1.nextval,4,'0') from dual
+	</select>
+</mapper>

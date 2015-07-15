@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.view.WaterPriceVMapper">
+	<!-- 结果集 -->
+	<resultMap type="waterPriceV" id="WaterPriceV">
+		<id column="wp_id" property="wpId"/>
+		<result column="price_type" property="priceType"/>
+		<result column="price" property="price"/>
+		<result column="ladder_start_measure" property="ladderStartMeasure"/>
+		<result column="ladder_end_measure" property="ladderEndMeasure"/>
+		<result column="price_type_name" property="priceTypeName"/>
+	</resultMap>
+	
+	<!-- 所有字段 -->
+	<sql id="allColumn">
+		wp_id,price_type,price,ladder_start_measure,ladder_end_measure,price_type_name
+	</sql>
+	
+	<!-- 获取水费价格 -->
+	<select id="queryWaterPriceV" resultMap="WaterPriceV">
+		select <include refid="allColumn"/> from wcs_sys_water_price_v
+		<where>
+			1=1
+			<if test="price!=null">
+				and price &gt;=#{price}
+			</if>
+			<if test="endPrice!=null">
+				and price &lt;=#{endPrice}
+			</if>
+			<if test="ladderStartMeasure!=null">
+				and ladder_start_measure &lt;=#{ladderStartMeasure}
+			</if>
+			<if test="ladderEndMeasure!=null">
+				and ladder_end_measure &gt;=#{ladderEndMeasure}
+			</if>
+			<if test="priceType!=null and priceType!=''">
+				and price_type = #{priceType}
+			</if>
+		</where>
+		order by price desc
+	</select>
+	<!-- 根据水价类型，用水量获取水价信息 -->
+	<select id="queryWaterPriceVByPrice" parameterType="java.util.Map" resultMap="WaterPriceV">
+		select <include refid="allColumn"/> from wcs_sys_water_price_v
+		<where>
+			price_type=#{priceType} and ladder_start_measure&lt;=#{definiteNumber} and ladder_end_measure&gt;=#{definiteNumber}
+		</where>
+	</select>
+</mapper>

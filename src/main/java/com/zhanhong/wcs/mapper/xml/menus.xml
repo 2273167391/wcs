@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.MenusMapper">
+	<!-- 结果集 -->
+	<resultMap type="menus" id="Menus">
+		<id column="menu_id" property="menuId"/>
+		<result column="menu_parent_id" property="menuParentId"/>
+		<result column="menu_name" property="menuName"/>
+		<result column="menu_url" property="menuUrl"/>
+		<result column="menu_level" property="menuLevel"/>
+		<result column="remarks" property="remarks"/>
+		<result column="version" property="version"/>
+		<result column="creation_by" property="creationBy"/>
+		<result column="creation_date" property="creationDate"/>
+		<result column="last_update_by" property="lastUpdateBy"/>
+		<result column="last_update_date" property="lastUpdateDate"/>
+	</resultMap>
+	
+	<!-- 添加字段 -->
+	<sql id="addColumn">
+		menu_id,menu_parent_id,menu_name,menu_url,menu_level,remarks,version,creation_by,creation_date
+	</sql>
+	
+	<!-- 所有字段 -->
+	<sql id="allColumn">
+		<include refid="addColumn"/>,last_update_by,last_update_date
+	</sql>
+	<!-- 表名 -->
+	<sql id="tableName">wcs_sys_menus</sql>
+	
+	<!-- 添加菜单 -->
+	<insert id="addMenus" parameterType="menus">
+		insert into <include refid="tableName"/>(<include refid="addColumn"/>)
+		values(wcs_sys_menus_s.nextval,
+		<choose>
+			<when test="menuParentId!=null">#{menuParentId}</when>
+			<otherwise>null</otherwise>
+		</choose>,
+		<choose>
+			<when test="menuName!=null">#{menuName}</when>
+			<otherwise>null</otherwise>
+		</choose>,
+		<choose>
+			<when test="menuUrl!=null">#{menuUrl}</when>
+			<otherwise>null</otherwise>
+		</choose>,#{menuLevel},
+		<choose>
+			<when test="remarks">#{remarks}</when>
+			<otherwise>null</otherwise>
+		</choose>
+		,#{version},#{creationBy},#{creationDate})
+	</insert>
+	
+	<!-- 修改菜单 -->
+	<update id="updateMenus" parameterType="menus">
+		update <include refid="tableName"/>
+		<set>
+			<if test="menuName!=null">
+				menu_name=#{menuName}
+			</if>
+			<if test="menuUrl!=null">
+				,menu_url=#{menuUrl}
+			</if>
+			<if test="remarks!=null">
+				,remarks=#{remarks}
+			</if>
+			,last_update_by=#{lastUpdateBy},last_update_date=#{lastUpdateDate}
+		</set>
+		<where>
+			menu_id=#{menuId}
+		</where>
+	</update>
+	
+	<!-- 删除菜单 -->
+	<delete id="deleteMenus" parameterType="int">
+		delete from <include refid="tableName"/> where menu_id=#{menuId}
+	</delete>
+	
+	<!-- 根据上级菜单Id查询菜单 -->
+	<select id="queryMenuByParentId" parameterType="int" resultMap="Menus">
+		select <include refid="allColumn"/> from <include refid="tableName"/>
+		<where>menu_parent_id=#{menuParentId}</where>
+	</select>
+	
+	<!-- 根据角色ID获取菜单 -->
+	<select id="queryMenuByRoleId" parameterType="int" resultMap="Menus">
+		select m.* from wcs_sys_menus m
+		left join wcs_sys_menu_role mr on m.menu_id=mr.menu_id
+		where mr.role_id=#{roleId} order by m.menu_id
+	</select>
+	
+	<!-- 获取所有菜单 -->
+	<select id="queryAllMenu" resultMap="Menus">
+		select <include refid="allColumn"/> from <include refid="tableName"/> order by menu_id
+	</select>
+	
+	<!-- 根据菜单名称查询菜单 -->
+	<select id="queryMenuByName" parameterType="String" resultMap="Menus">
+		select <include refid="allColumn"/> from <include refid="tableName"/>
+		<where>menu_name=#{menuName}</where>
+	</select>
+</mapper>

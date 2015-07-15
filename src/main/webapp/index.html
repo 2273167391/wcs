@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <meta charset="UTF-8">
+    <title>水电收费系统-用户登录</title>
+    <link rel="shortcut icon" type="image/ico" href="resources/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="resources/easyui/themes/gray/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="resources/easyui/themes/icon.css"/>
+    <link rel="stylesheet" type="text/css" href="resources/css/common.css"/>
+    <style type="text/css">
+        label[for="password"] {
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        #wcs_container{
+            position: absolute;
+            height:100%;
+            width:100%;
+            background: url("resources/images/wcs_back.jpg") no-repeat;
+            background-size: 100% auto;
+        }
+
+        input[name] {
+        	border-radius: 10px;
+            padding-left: 25px;
+            transition:1s;
+            -webkit-transition:1s;
+            -moz-transition:1s;
+        }
+
+        input[name="userName"]{
+            background: url("resources/images/user_on_focus.png") no-repeat 5px center
+        }
+
+        input[name="password"]{
+            background: url("resources/images/pwd_on_focus.png") no-repeat 5px center
+        }
+
+        input[name]:focus{
+            border:1px solid #56ABE4;
+            box-shadow: 0px 0px 3px 0px #56ABE4;
+        }
+
+        input[name="userName"]:focus{
+            background: url("resources/images/user_focus.png") no-repeat 5px center
+        }
+
+        input[name="password"]:focus{
+            background: url("resources/images/pwd_focus.png") no-repeat 5px center
+        }
+
+
+        p {display: inline}
+        .wcs_role_container{display:none}
+    </style>
+</head>
+<body>
+<div id="wcs_container">
+    <img src="resources/images/zhkjlogo.png" style="margin-left: 10px;"/>
+ 
+    <div id="wcs_login_win" class="easyui-window" title="用户登录" style="height:140px;width:475px;">
+        <div id="wcs_login_layout" class="easyui-layout" data-options="fit:true">
+            <form action="login" method="post">
+                <div data-options="region:'center',border:false" style="text-align:center;padding: 20px 10px 0px 10px">
+                    <p><label for="username">用户名：</label><input type="text" name="userName" id="username"/></p>
+
+                    <p><label for="password">密码：</label><input type="password" name="password" id="password"/></p>
+                </div>
+                <div data-options="region:'south',border:false" style="text-align:right;padding:10px 40px 20px 0px">
+                    <a class="easyui-linkbutton" data-options="iconCls:'icon-login'" href="javascript:void(0)"
+                       onclick="javascript:userLogin()">登录</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- 角色选择窗口 -->
+    <div class="wcs_role_container">
+	    <div id="wcs_role_win" style="padding:10px;text-align:center">
+	    	<select id="wcs_role" class="easyui-combobox" style="width:150px"></select>
+	    </div>
+    </div>
+
+</div>
+<!--Jquery-->
+<script type="text/javascript" src="resources/jquery/jquery-1.10.2.js"></script>
+<!--EasyUI-->
+<script type="text/javascript" src="resources/easyui/jquery.easyui.min.js"></script>
+<!--EasyUI国际化文件-->
+<script type="text/javascript" src="resources/easyui/local/easyui-lang-zh_CN.js"></script>
+<!-- Layer -->
+<script type="text/javascript" src="resources/layer/layer.js"></script>
+<script type="text/javascript" src="resources/js/common.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //定义窗口显示
+        $("#wcs_login_win").window({
+            collapsible: false,//不显示折叠按钮
+            minimizable: false,//不显示最小化按钮
+            maximizable: false,//不显示最大化按钮
+            closable: false,//不显示关闭按钮
+            draggable: false,//不能拖拽
+            resizable: false//不能够改变窗口大小
+        });
+    });
+    /**
+     * 用户登录
+     */
+    function userLogin() {
+        //获取用户名
+        var username = $("#username").val();
+        //获取密码
+        var password = $("#password").val();
+        //判断用户名密码是否为空
+        if (username == "" || password == "") {
+            $.messager.alert("提示框", "用户名或密码不能为空！", "error");
+        } else {
+        	var index=layer.load();
+        	$.ajax({
+        		url:$("form").attr("action"),
+        		data:$("form").serialize(),
+        		type:'post',
+        		dataType:'json',
+        		success:function(data){
+        			if(data.result==0){
+        				$.messager.alert("提示框",data.message, "error");
+        			}else{
+        				userRole(data);
+        			}
+        			layer.close(index);
+        		},
+        		error:function(e){
+        			$.messager.alert("提示框","异步请求失败！","error");
+        			layer.close(index);
+        		}
+        	});
+        }
+    }
+    
+</script>
+</body>
+</html>

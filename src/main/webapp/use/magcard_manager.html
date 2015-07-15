@@ -1,0 +1,130 @@
+<div class="easyui-layout" data-options="fit:true">
+	<div data-options="region:'north',border:false">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'north',border:false" style="text-align:right;padding:2px 10px 0px 0px">
+				<a href="javascript:queryMagcard()" data-options="iconCls:'icon-search',plain:true" class="easyui-linkbutton">查询</a>
+				<a href="javascript:addMagcard()" data-options="iconCls:'icon-add',plain:true" class="easyui-linkbutton">新增</a>
+				<a href="#" onclick="rechargeMagcard()" id="recharge_magcard" data-options="iconCls:'icon-edit',plain:true" class="easyui-linkbutton">充值</a>
+				<a href="#" onclick="cancelMagcard()" id="cancel_magcard" data-options="iconCls:'icon-cancel',plain:true" class="easyui-linkbutton">注销磁卡</a>
+				<a href="#" onclick="deleteMagcard()" id="dele_magcard" data-options="iconCls:'icon-cancel',plain:true" class="easyui-linkbutton">删除</a>
+			</div>
+			<div data-options="region:'center',border:false" style="border-top:1px solid #d3d3d3;padding:10px 10px;">
+				<form id="wcs_magcard_search_form" method="post">
+					<table style="width: 100%" >
+						<tr>
+							<td align="right">卡号：</td>
+							<td><input type="text" name="cardNumber"/></td>
+							<td align="right">用户：</td>
+							<td><select class="easyui-combobox wcs_user" style="width:200px;height:25px;" name="userId"></select></td>
+							<td align="right">状态：</td>
+							<td><select class="easyui-combobox wcs_status" style="width:200px;height:25px;" name="statusCode"></select></td>
+							<td align="right">开卡人：</td>
+							<td><select class="easyui-combobox wcs_emp" style="width:200px;height:25px;" name="creationBy"></select></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div data-options="region:'center',border:false" style="border-top:1px solid #d3d3d3">
+		<table class="easyui-datagrid wcs_magcard_list" data-options="rownumbers:true,
+                    singleSelect:true,
+                    autoRowHeight:false,
+                    fitColumns:true,
+                    striped:true,
+                    pagination:true,
+                    pageSize:30,fit:true,border:false">
+            <thead>
+           <tr>
+           		<th data-options="filed:'magcardId',hidden:true">磁卡ID</th>
+           		<th data-options="field:'cardNumber',halign:'center'" width="20%">卡号</th>
+                <th data-options="field:'amount',halign:'center'" width="10%">余额</th>
+                <th data-options="field:'userName',halign:'center'" width="10%">用户名</th>
+                <th data-options="field:'status',halign:'center'" width="10%">状态</th>
+                <th data-options="field:'creationName',halign:'center'" width="10%">开卡人</th>
+                <th data-options="field:'creationDate',halign:'center'" width="10%">开卡时间</th>
+            </tr>
+            </thead>
+        </table>
+	</div>
+	<div data-options="region:'south',border:false">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'west',title:'充值记录',collapsible:false" style="width:550px;height:200px;border-left:none;border-bottom: none">
+				<table class="easyui-datagrid wcs_mag_recharge_list" data-options="rownumbers:true,
+		                    singleSelect:true,
+		                    autoRowHeight:false,
+		                    striped:true,
+		                    pagination:true,
+		                    pageSize:10,fit:true,border:false">
+		            <thead>
+			           <tr>
+			           		<th data-options="filed:'rechargeId',hidden:true">记录ID</th>
+			           		<th data-options="field:'serialNumber',halign:'center'" width="200px">流水号</th>
+			                <th data-options="field:'rechargeMoney',halign:'center'" width="80px">充值金额</th>
+			                <th data-options="field:'balance',halign:'center'" width="80px">余额</th>
+			                <th data-options="field:'creationName',halign:'center'" width="100px">充值人员</th>
+			                <th data-options="field:'creationDate',halign:'center'" width="150px">充值时间</th>
+			                <th data-options="field:'remarks',halign:'center'" width="200px">备注</th>
+			            </tr>
+		            </thead>
+		        </table>
+			</div>
+			<div data-options="region:'center',title:'消费记录'" style="border-right: none;border-bottom: none">
+				<table class="easyui-datagrid wcs_mag_unrecharge_list" data-options="rownumbers:true,
+		                    singleSelect:true,
+		                    autoRowHeight:false,
+		                    striped:true,
+		                    pagination:true,
+		                    pageSize:10,fit:true,border:false">
+		            <thead>
+			           <tr>
+			           		<th data-options="filed:'rechargeId',hidden:true">记录ID</th>
+			           		<th data-options="field:'serialNumber',halign:'center'" width="200px">流水号</th>
+			                <th data-options="field:'rechargeMoney',halign:'center'" width="80px">扣款金额</th>
+			                <th data-options="field:'balance',halign:'center'" width="80px">余额</th>
+			                <th data-options="field:'creationName',halign:'center'" width="100px">扣款人员</th>
+			                <th data-options="field:'creationDate',halign:'center'" width="150px">扣款时间</th>
+			                <th data-options="field:'remarks',halign:'center'" width="200px">备注</th>
+			            </tr>
+		            </thead>
+		        </table>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 保存磁卡窗口 -->
+<div id="wcs_save_magcard_win">
+	<form class="wcs_save_magcard_form" method="post">
+		<div class="wcs_form_block">
+			<label>用户：</label>
+			<input type="hidden" name="magcardId"/>
+			<select class="easyui-combobox wcs_user" style="width:200px;height:25px;" name="userId" required="required"></select>
+		</div>
+		<div class="wcs_form_block">
+			<label>金额：</label>
+			<input type="text" class="easyui-validatebox easyui-numberbox" data-options="min:0,precision:2,value:0"  name="amount"/>
+		</div>
+	</form>
+</div>
+<!-- 充值磁卡窗口 -->
+<div id="wcs_recharge_magcard_win">
+	<form class="wcs_recharge_magcard_form" method="post">
+		<div class="wcs_form_block">
+			<label>卡号：</label>
+			<input type="hidden" name="magcardId"/>
+			<input type="text" class="easyui-validatebox" name="cardNumber" readonly="readonly"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>充值金额：</label>
+			<input type="text" id="recharge_money" class="easyui-validatebox easyui-numberbox" data-options="min:0,precision:2,value:0"  name="rechargeMoney"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>备注：</label>
+			<textarea rows="3" cols="40" name="remarks"></textarea>
+		</div>
+	</form>
+</div>
+<script type="text/javascript" src="../resources/js/use/magcard_manager.js"></script>
+<script type="text/javascript">
+	loadPage();
+</script>

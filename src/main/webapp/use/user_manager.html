@@ -1,0 +1,141 @@
+<div class="easyui-layout" data-options="fit:true">
+	<div data-options="region:'north',border:false">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'north',border:false" style="text-align:right;padding:2px 10px 0px 0px">
+				<a href="javascript:queryUse()" data-options="iconCls:'icon-search',plain:true" class="easyui-linkbutton">查询</a>
+				<a href="javascript:addUse()" data-options="iconCls:'icon-add',plain:true" class="easyui-linkbutton">新增</a>
+				<a href="#" onclick="updateUse()" id="update_user" data-options="iconCls:'icon-edit',plain:true" class="easyui-linkbutton">编辑</a>
+				<a href="#" onclick="deleteUse()" id="dele_user" data-options="iconCls:'icon-cancel',plain:true" class="easyui-linkbutton">注销</a>
+			</div>
+			<div data-options="region:'center',border:false" style="border-top:1px solid #d3d3d3;padding:10px 10px;">
+				<form id="wcs_use_search_form" method="post">
+					<table style="width: 100%" >
+						<tr>
+							<td align="right">用户编码：</td>
+							<td><input type="text" name="userCode"/></td>
+							<td align="right">姓名：</td>
+							<td><input type="text" name="userName"/></td>
+							<td align="right">状态：</td>
+							<td><select class="easyui-combobox wcs_user_status" style="width:200px;height:25px;" name="status"></select></td>
+							<td align="right">用户类型：</td>
+							<td><select class="easyui-combobox wcs_user_type" style="width:200px;height:25px;" name="userType"></select></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div data-options="region:'center',border:false" style="border-top:1px solid #d3d3d3">
+		<table class="easyui-datagrid wcs_user_list" data-options="rownumbers:true,
+                    singleSelect:true,
+                    autoRowHeight:false,
+                    
+                    striped:true,
+                    pagination:true,
+                    pageSize:30,fit:true,border:false">
+            <thead>
+           <tr>
+           		<th data-options="filed:'userId',hidden:true">用户ID</th>
+           		<th data-options="field:'userCode',halign:'center'" width="100px">用户编码</th>
+                <th data-options="field:'userName',halign:'center'" width="100px">姓名</th>
+                <th data-options="field:'mobileTelephone',halign:'center'" width="150px">手机</th>
+                <th data-options="field:'homeTelephone',halign:'center'" width="150px">家庭电话</th>
+                <th data-options="field:'idCard',halign:'center'" width="200px">身份证号</th>
+                <th data-options="field:'homeAddress',halign:'center'" width="300px">住址</th>
+                <th data-options="field:'statusName',halign:'center'" width="70px">状态</th>
+                <th data-options="field:'userTypeName',halign:'center'" width="70px">类型</th>
+                <th data-options="field:'remarks',halign:'center'" width="300px">备注</th>
+            </tr>
+            </thead>
+        </table>
+	</div>
+	<div data-options="region:'south',border:false" style="height:200px;">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'west',title:'用户材料',collapsible:false,width:600" style="border-left:none;border-bottom: none">
+				<table class="easyui-datagrid wcs_user_material_list" data-options="rownumbers:true,
+		                    singleSelect:true,
+		                    autoRowHeight:false,
+		                    fitColumns:true,
+		                    striped:true,fit:true,border:false">
+		            <thead>
+			           <tr>
+			           		<th data-options="filed:'materialId',hidden:true">材料ID</th>
+			           		<th data-options="field:'materialName',halign:'center'" width="10%">材料名称</th>
+			                <th data-options="field:'price',halign:'center'" width="10%">单价</th>
+			                <th data-options="field:'numbers',halign:'center'" width="10%">数量</th>
+			                <th data-options="field:'amount',halign:'center'" width="10%">金额</th>
+			            </tr>
+		            </thead>
+		        </table>
+			</div>
+			<div data-options="region:'center',title:'用户水表'" style="border-bottom: none;border-top: none">
+				<table class="easyui-datagrid wcs_user_meter_list" data-options="rownumbers:true,
+		                    singleSelect:true,
+		                    autoRowHeight:false,
+		                    striped:true,fit:true,border:false">
+		            <thead>
+			           <tr>
+			           		<th data-options="filed:'waterMeterId',hidden:true">水表ID</th>
+			           		<th data-options="field:'waterMeterCode',halign:'center'" width="150px">水表编码</th>
+			           		<th data-options="field:'meterStatus',halign:'center'" width="100px">水表状态</th>
+			                <th data-options="field:'appointmentInstallDate',halign:'center'" width="150px">预约安装日期</th>
+			                <th data-options="field:'changeMeterDate',halign:'center'" width="150px">换表日期</th>
+			                <th data-options="field:'changeMeterUpNumber',halign:'center'" width="100px">换表起方</th>
+			                <th data-options="field:'changeMeterCode',halign:'center'" width="150px">换表水表编码</th>
+			                <th data-options="field:'installDate',halign:'center'" width="150px">安装日期</th>
+			                <th data-options="field:'empName',halign:'center'" width="100px">安装人员</th>
+			                <th data-options="field:'isChangeMeter',halign:'center'" width="100px">是否换表</th>
+			                <th data-options="field:'isExecute',halign:'center'" width="100px">是否安装</th>
+			            </tr>
+		            </thead>
+		        </table>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 保存用户窗口 -->
+<div id="wcs_save_use_win">
+	<form class="wcs_save_use_form" method="post">
+		<div class="wcs_form_block">
+			<label>用户编码：</label>
+			<input type="hidden" name="userId"/>
+			<input type="text" name="userCode" readonly="readonly"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>户名：</label>
+			<input type="text" class="easyui-validatebox" name="userName" required="required"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>手机：</label>
+			<input type="text" class="easyui-validatebox"  name="mobileTelephone" required="required"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>家庭电话：</label>
+			<input type="text" name="homeTelephone"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>身份证号：</label>
+			<input type="text" class="easyui-validatebox" name="idCard" required="required"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>用户类型：</label>
+			<select class="easyui-combobox wcs_user_type" style="width:200px;height:25px;" name="userType" required="required"></select>
+		</div>
+		<div class="wcs_form_block">
+			<label>居住街道：</label>
+			<select class="easyui-combobox wcs_use_street" style="width:200px;height:25px;" name="streetId" required="required"></select>
+		</div>
+		<div class="wcs_form_block">
+			<label>住址：</label>
+			<input type="text" class="easyui-validatebox" name="homeAddress" required="required"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>备注：</label>
+			<textarea rows="3" cols="50" name="remarks"></textarea>
+		</div>
+	</form>
+</div>
+<script type="text/javascript" src="../resources/js/use/user_manager.js"></script>
+<script type="text/javascript">
+	loadPage();
+</script>

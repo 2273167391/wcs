@@ -1,0 +1,111 @@
+<div class="easyui-layout" data-options="fit:true">
+	<div data-options="region:'north',border:false">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'north',border:false" style="text-align:right;padding:2px 10px 0px 0px">
+				<a href="javascript:queryEmp()" data-options="iconCls:'icon-search',plain:true" class="easyui-linkbutton">查询</a>
+				<a href="javascript:addEmp()" data-options="iconCls:'icon-add',plain:true" class="easyui-linkbutton">新增</a>
+				<a href="#" id="update_emp" onclick="updateEmp()" data-options="iconCls:'icon-edit',plain:true" class="easyui-linkbutton">编辑</a>
+				<a href="#" id="delete_emp" onclick="deleteEmp()" data-options="iconCls:'icon-cancel',plain:true" class="easyui-linkbutton">删除</a>
+			</div>
+			<div data-options="region:'center',border:false" style="border-top:1px solid #d3d3d3;padding:10px 10px;">
+				<form id="wcs_emp_search_form" method="post">
+					<table style="width: 100%" >
+						<tr>
+							<td align="right">职员编码：</td>
+							<td><input type="text" name="empCode"/></td>
+							<td align="right">帐户名：</td>
+							<td><input type="text" name="account"/></td>
+							<td align="right">姓名：</td>
+							<td><input type="text" name="trueName"/></td>
+							<td align="right">性别：</td>
+							<td><select class="easyui-combobox wcs_sex" style="width:200px;height:25px;" name="sex"></select></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div data-options="region:'center',border:false" style="border-top:1px solid #d3d3d3">
+		<table class="easyui-datagrid wcs_emp_list" data-options="rownumbers:true,
+                    singleSelect:true,
+                    autoRowHeight:false,
+                    striped:true,
+                    pagination:true,
+                    pageSize:30,fit:true,border:false">
+            <thead>
+           <tr>
+           		<th data-options="filed:'empId',hidden:true">职员ID</th>
+           		<th data-options="field:'empCode',halign:'center'" width="150px">职员编码</th>
+                <th data-options="field:'account',halign:'center'" width="150px">用户名</th>
+                <th data-options="field:'trueName',halign:'center'" width="150px">姓名</th>
+                <th data-options="field:'roleName',halign:'center'" width="250px">角色</th>
+                <th data-options="field:'sexName',halign:'center'" width="50px">性别</th>
+                <th data-options="field:'mobileTelephone',halign:'center'" width="150px">手机</th>
+                <th data-options="field:'homeTelephone',halign:'center'" width="150px">家庭电话</th>
+                <th data-options="field:'officeTelephone',halign:'center'" width="150px">办公电话</th>
+                <th data-options="field:'birthday',halign:'center'" width="150px">出生日期</th>
+                <th data-options="field:'email',halign:'center'" width="150px">电子邮箱</th>
+                <th data-options="field:'address',halign:'center'" width="300px">住址</th>
+            </tr>
+            </thead>
+        </table>
+	</div>
+</div>
+<!-- 保存职员 -->
+<div id="wcs_save_emp_win">
+	<form class="wcs_save_emp_form" method="post">
+		<div class="wcs_form_block">
+			<label>职员编码：</label>
+			<input type="hidden" name="empId"/>
+			<input type="text" name="empCode" readonly="readonly"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>帐户名：</label>
+			<input type="text" class="easyui-validatebox account" name="account" required="required"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>姓名：</label>
+			<input type="text" class="easyui-validatebox" name="trueName" data-options="required:true"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>性别：</label>
+			<select class="easyui-combobox wcs_sex" style="width:200px;height:25px;" name="sex"></select>
+		</div>
+		<div class="wcs_form_block">
+			<label>手机：</label>
+			<input type="text"  name="mobileTelephone"></input>
+		</div>
+		<div class="wcs_form_block">
+			<label>家庭电话：</label>
+			<input type="text" name="homeTelephone"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>办公电话：</label>
+			<input type="text" name="officeTelephone"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>身份证号：</label>
+			<input type="text" name="idCard"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>出生日期：</label>
+			<input type="text" class="easyui-datebox" name="birthday" style="width:200px;height:25px;"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>电子邮箱：</label>
+			<input type="text" name="email"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>住址：</label>
+			<input type="text" name="address"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>描述：</label>
+			<textarea class="easyui-validatebox" rows="3" cols="50" name="description"></textarea>
+		</div>
+	</form>
+</div>
+<script type="text/javascript" src="../resources/js/sys/employee_manager.js"></script>
+<script type="text/javascript">
+	loadPage();
+</script>

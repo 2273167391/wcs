@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.view.WaterChargeVMapper">
+	<!-- 结果集 -->
+	<resultMap type="waterChargeV" id="WaterChargeV">
+		<id column="charge_id" property="chargeId"/>
+		<result column="charge_code" property="chargeCode"/>
+		<result column="water_meter_id" property="waterMeterId"/>
+		<result column="water_meter_code" property="waterMeterCode"/>
+		<result column="current_month_money" property="currentMonthMoney"/>
+		<result column="real_price" property="realPrice"/>
+		<result column="price" property="price"/>
+		<result column="change_money" property="changeMoney"/>
+		<result column="charge_type" property="chargeType"/>
+		<result column="charge_type_name" property="chargeTypeName"/>
+		<result column="charge_status" property="chargeStatus"/>
+		<result column="charge_status_name" property="chargeStatusName"/>
+		<result column="remarks" property="remarks"/>
+		<result column="definite_number" property="definiteNumber"/>
+		<result column="charge_emp_id" property="chargeEmpId"/>
+		<result column="charge_emp_name" property="chargeEmpName"/>
+		<result column="charge_date" property="chargeDate"/>
+		<result column="user_id" property="userId"/>
+		<result column="user_name" property="userName"/>
+		<result column="copy_meter_name" property="copyMeterName"/>
+	</resultMap>
+	
+	<!-- 所有字段 -->
+	<sql id="allColumn">
+		charge_id,charge_code,water_meter_id,water_meter_code,current_month_money,real_price,price,change_money,charge_type,charge_type_name,charge_status,charge_status_name,remarks,
+		definite_number,charge_emp_id,charge_emp_name,charge_date,user_id,user_name,copy_meter_name
+	</sql>
+	
+	<!-- 查询收费记录 -->
+	<select id="queryWaterChargeAll" parameterType="waterChargeV" resultMap="WaterChargeV">
+		select <include refid="allColumn"/> from wcs_cost_water_charge_v
+		<where>
+			1=1
+			<if test="waterMeterId!=null">
+				and water_meter_id=#{waterMeterId}
+			</if>
+			<if test="chargeType!=null and chargeType!=''">
+				and charge_type=#{chargeType}
+			</if>
+			<if test="chargeStatus!=null and chargeStatus!=''">
+				and charge_status=#{chargeStatus}
+			</if>
+			<if test="chargeEmpId!=null">
+				and charge_emp_id=#{chargeEmpId}
+			</if>
+			<if test="userId!=null">
+				and user_id=#{userId}
+			</if>
+			<if test="chargeDate!=null">
+				and to_char(charge_date,'yyyy-MM-dd')&gt;=to_char(#{chargeDate},'yyyy-MM-dd')
+			</if>
+			<if test="endChargeDate!=null">
+				and to_char(charge_date,'yyyy-MM-dd')&lt;=to_char(#{endChargeDate},'yyyy-MM-dd')
+			</if>
+		</where>
+		order by charge_date desc
+	</select>
+	
+	<!-- 获取未缴费的记录 -->
+	<select id="queryNotWaterCharge" resultMap="WaterChargeV">
+		select <include refid="allColumn"/> from wcs_cost_water_charge_v
+		<where>charge_status='W008002'</where>
+	</select>
+</mapper>

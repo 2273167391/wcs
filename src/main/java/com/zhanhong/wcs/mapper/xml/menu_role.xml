@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.MenuRoleMapper">
+	
+	<!-- 表名 -->
+	<sql id="tableName">wcs_sys_menu_role</sql>
+	
+	<!-- 添加菜单与角色关系 -->
+	<insert id="addMenuRole" parameterType="java.util.Map">
+		insert into <include refid="tableName"/>(menu_id,role_id)
+		values(#{menuId},#{roleId})
+	</insert>
+	
+	<!-- 根据角色ID删除关系 -->
+	<delete id="deleteMenuRole" parameterType="int">
+		delete from <include refid="tableName"/> where role_id=#{roleId}
+	</delete>
+	
+	<!-- 根据角色ID获取菜单ID -->
+	<select id="getMenuId" parameterType="int" resultType="String">
+		select listagg(menu_id,',') within group(order by menu_id) menu_ids from wcs_sys_menu_role where role_id=#{roleId}
+	</select>
+</mapper>

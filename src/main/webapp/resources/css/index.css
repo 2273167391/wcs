@@ -1,0 +1,91 @@
+/*start wcs_main_hreader*/
+.wcs_main_header{
+    height:81px;
+}
+
+.wcs_main_header .wcs_header_log{
+    background: url('../images/zh_logo.png') no-repeat 10px 5px;
+}
+
+.wcs_main_header .wcs_header_wel_info{
+    text-align: right;
+    padding-top: 10px;
+    padding-right: 10px;
+}
+
+.wcs_icon_role{
+	
+	background:url('../images/role_a.png') no-repeat center center;
+}
+
+.wcs_icon_role:hover{
+	background:url('../images/role_b.png') no-repeat center center;
+}
+
+.wcs_icon_up_pwd{
+	background:url('../images/update_a.png') no-repeat center center;
+}
+
+.wcs_icon_up_pwd:hover{
+	background:url('../images/update_b.png') no-repeat center center;
+}
+
+.wcs_icon_logout{
+    background: url('../images/login_out.png') no-repeat center center;
+}
+
+.wcs_icon_logout:hover{
+    background: url('../images/login_out_f.png') no-repeat center center;
+}
+/*end wcs_main_header*/
+
+/*start wcs_main_menus*/
+.wcs_main_menus{
+    width:200px;
+}
+
+.wcs_main_menus p{
+    line-height: 27px;
+    padding-left: 30px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #D3D3D3;
+    background:url("../images/ico05.png") no-repeat 10px center
+}
+
+.wcs_main_menus p:hover{
+    background: rgba(0,146,220,0.8) url("../images/ico05.png") no-repeat 10px center;
+    color:#ffffff;
+    cursor: pointer;
+}
+
+/*end wcs_main_menus*/
+
+/*start wcs_main_content*/
+.wcs_main_content{
+    padding: 10px;
+}
+
+.wcs_form_block{
+	margin:8px;
+}
+
+/*end wcs_main_content*/
+
+/*start wcs_main_footer*/
+.wcs_main_footer {
+    height:37px;
+    line-height: 30px;
+    padding-left: 10px;
+}
+/*end wcs_main_footer*/
+/*index common*/
+input{height:25px;}
+
+input[type="text"],input[type='password']{
+	width:200px;
+}
+
+label{
+	width:100px;
+	display:inline-block;
+}

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.WordBookMapper">
+	<!-- 结果集 -->
+	<resultMap type="wordBook" id="WordBook">
+		<id column="wordbook_code" property="wordBookCode"/>
+		<result column="wordbook_type_code" property="wordBookTypeCode"/>
+		<result column="wordbook_content" property="wordBookContent"/>
+		<result column="effective_date" property="effectiveDate"/>
+		<result column="invalidation_date" property="invalidationDate"/>
+		<result column="remarks" property="remarks"/>
+		<result column="reserved1" property="reserved1"/>
+		<result column="version" property="version"/>
+		<result column="creation_by" property="creationBy"/>
+		<result column="creation_date" property="creationDate"/>
+		<result column="last_update_by" property="lastUpdateBy"/>
+		<result column="last_update_date" property="lastUpdateDate"/>
+	</resultMap>
+
+	<!-- 添加字段 -->
+	<sql id="addColumn">
+		wordbook_code,
+		wordbook_type_code,
+		wordbook_content,
+		effective_date,
+		invalidation_date,
+		remarks,
+		reserved1,
+		version,
+		creation_by,
+		creation_date
+	</sql>
+	<!-- 所有字段 -->
+	<sql id="allColumn">
+		<include refid="addColumn"/>,last_update_by,last_update_date
+	</sql>
+	<!-- 表名 -->
+	<sql id="tableName">wcs_sys_wordbook</sql>
+	<!-- 添加数据字典 -->
+	<insert id="addWordBook" parameterType="wordBook">
+		insert into <include refid="tableName"/>(<include refid="addColumn"/>)
+		values(#{wordBookCode},#{wordBookTypeCode},#{wordBookContent},#{effectiveDate},
+		<choose>
+			<when test="invalidationDate!=null">#{invalidationDate}</when>
+			<otherwise>null</otherwise>
+		</choose>
+		,<choose>
+			<when test="remarks!=null">#{remarks}</when>
+			<otherwise>null</otherwise>
+		</choose>,
+		<choose>
+			<when test="reserved1!=null">#{reserved1}</when>
+			<otherwise>null</otherwise>
+		</choose>
+		,#{version},#{creationBy},#{creationDate})
+	</insert>
+	
+	<!-- 修改数据字典 -->
+	<update id="updateWordBook" parameterType="wordBook">
+		update <include refid="tableName"/>
+		<set>
+			wordbook_content = #{wordBookContent}
+			<if test="invalidationDate!=null">,invalidation_date=#{invalidationDate}</if>
+			<if test="remarks!=null">,remarks=#{remarks}</if>
+			<if test="reserved1!=null">,reserved1=#{reserved1}</if>
+			,last_update_by=#{lastUpdateBy},last_update_date=#{lastUpdateDate}
+		</set>
+		<where>wordbook_code = #{wordBookCode}</where>
+	</update>
+	
+	<!-- 获取字典类别 -->
+	<select id="queryWordbookType" resultMap="WordBook">
+		select <include refid="allColumn"/> from <include refid="tableName"/>
+		<where>wordbook_type_code is null</where>
+	</select>
+	<!-- 查询数据字典 -->
+	<select id="queryWordbook" resultMap="WordBook" parameterType="wordBook">
+		select <include refid="allColumn"/> from <include refid="tableName"/>
+		<where>
+			1=1
+			<if test="wordBookCode!=null and wordBookCode!=''">
+				and wordbook_code like upper(#{wordBookCode})
+			</if>
+			<if test="wordBookTypeCode!=null and wordBookTypeCode !=''">
+				and wordbook_type_code=#{wordBookTypeCode}
+			</if>
+			<if test="wordBookContent!=null and wordBookContent!=''">
+				and wordbook_content like #{wordBookContent}
+			</if>
+			and effective_date&lt;=sysdate and sysdate&lt;=nvl(invalidation_date,sysdate+1)
+		</where>
+		order by wordbook_code
+	</select>
+	
+	<!-- 根据编码查询数据字典 -->
+	<select id="queryWordbookByCode" parameterType="String" resultMap="WordBook">
+		select <include refid="allColumn"/> from <include refid="tableName"/>
+		<where>wordbook_code = #{wordBookCode}</where>
+	</select>
+	
+	<!-- 根据编码类别查询数据字典 -->
+	<select id="queryWordbookByTypeCode" parameterType="String" resultMap="WordBook">
+		select <include refid="allColumn"/> from <include refid="tableName"/>
+		<where>wordbook_type_code=#{wordBookTypeCode}</where>
+	</select>
+	
+	<!-- 删除数据字典 -->
+	<delete id="deleteWordbook" parameterType="String">
+		delete from <include refid="tableName"/>
+		<where>wordbook_code = #{wordBookCode}</where>
+	</delete>
+	
+</mapper>

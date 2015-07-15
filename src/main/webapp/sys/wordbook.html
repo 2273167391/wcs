@@ -1,0 +1,83 @@
+<div class="easyui-layout" data-options="fit:true">
+	<div data-options="region:'north',border:false">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'north',border:false" style="text-align:right;padding:2px 10px 0px 0px">
+				<a href="javascript:queryWordbook()" data-options="iconCls:'icon-search',plain:true" class="easyui-linkbutton">查询</a>
+				<a href="javascript:addWordbook()" data-options="iconCls:'icon-add',plain:true" class="easyui-linkbutton">新增</a>
+				<a href="#" id="update_wordbook" onclick="updateWordbook()" data-options="iconCls:'icon-edit',plain:true" class="easyui-linkbutton">编辑</a>
+				<a href="#" id="delete_wordbook" onclick="deleteWordbook()" data-options="iconCls:'icon-cancel',plain:true" class="easyui-linkbutton">删除</a>
+			</div>
+			<div data-options="region:'center',border:false" style="border-top:1px solid #d3d3d3;padding:10px 10px;">
+				<form id="wcs_wordbook_search_form" method="post">
+					<table style="width: 100%" >
+						<tr>
+							<td align="right">字典编码：</td>
+							<td><input type="text" name="wordBookCode"/></td>
+							<td align="right">字典类别：</td>
+							<td><select id="wcs_wordbook_type" class="easyui-combobox" style="width:200px;height:25px;" name="wordBookTypeCode"></select></td>
+							<td align="right">字典内容：</td>
+							<td><input type="text" name="wordBookContent"/></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div data-options="region:'center',border:false" style="border-top:1px solid #d3d3d3">
+		<table id="wcs_wordbook_list" class="easyui-datagrid" data-options="rownumbers:true,
+                    singleSelect:true,
+                    autoRowHeight:false,
+                    fitColumns:true,
+                    striped:true,
+                    pagination:true,
+                    pageSize:30,fit:true,border:false">
+            <thead>
+           <tr>
+           		<th data-options="field:'wordBookCode',halign:'center'" width="10%">字典编码</th>
+                <th data-options="field:'wordBookTypeCode',halign:'center'" width="10%">字典类型编码</th>
+                <th data-options="field:'wordBookContent',halign:'center'" width="10%">字典内容</th>
+                <th data-options="field:'effectiveDate',halign:'center'" width="10%">生效时间</th>
+                <th data-options="field:'invalidationDate',halign:'center'" width="10%">失效时间</th>
+                <th data-options="field:'remarks',halign:'center'" width="10%">备注</th>
+            </tr>
+            </thead>
+        </table>
+	</div>
+</div>
+<!-- 保存数据字典弹窗 -->
+<div id="wcs_save_wordbook_win">
+	<form id="wcs_save_wordbook_form" method="post">
+		<div class="wcs_form_block">
+			<label>字典编码：</label>
+			<input id="wb_code" type="text" class="easyui-validatebox" name="wordBookCode" required="required"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>字典类别：</label>
+			<input id="wb_type_code" type="text" class="easyui-validatebox" name="wordBookTypeCode" required="required"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>字典内容：</label>
+			<input type="text" class="easyui-validatebox" name="wordBookContent" data-options="required:true"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>生效时间：</label>
+			<input id="wb_effective_date" type="text" class="easyui-datebox" name="effectiveDate" style="height:25px;"></input>
+		</div>
+		<div class="wcs_form_block">
+			<label>失效时间：</label>
+			<input type="text" class="easyui-datebox" name="invalidationDate" style="height:25px;"></input>
+		</div>
+		<div class="wcs_form_block">
+			<label>弹性域：</label>
+			<input type="text" class="easyui-validatebox" name="reserved1"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>备注：</label>
+			<textarea class="easyui-validatebox" rows="3" cols="50" name="description"></textarea>
+		</div>
+	</form>
+</div>
+<script type="text/javascript" src="../resources/js/sys/wordbook.js"></script>
+<script type="text/javascript">
+	loadPage();
+</script>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.MagcardMapper">
+	<!-- 结果集 -->
+	<resultMap type="magcard" id="Magcard">
+		<id column="magcard_id" property="magcardId"/>
+		<result column="card_number" property="cardNumber"/>
+		<result column="amount" property="amount"/>
+		<result column="user_id" property="userId"/>
+		<result column="status" property="status"/>
+		<result column="version" property="version"/>
+		<result column="creation_by" property="creationBy"/>
+		<result column="creation_date" property="creationDate"/>
+		<result column="last_update_by" property="lastUpdateBy"/>
+		<result column="last_update_date" property="lastUpdateDate"/>
+	</resultMap>
+
+	<!-- 添加字段 -->
+	<sql id="addColumn">
+		magcard_id,card_number,amount,user_id,status,version,creation_by,creation_date
+	</sql>
+	
+	<!-- 所有字段 -->
+	<sql id="allColumn">
+		<include refid="addColumn"/>,last_update_by,last_update_date
+	</sql>
+	
+	<!-- 表名 -->
+	<sql id="tableName">wcs_use_magcard</sql>
+	
+	<!-- 添加磁卡 -->
+	<insert id="addMagcard" parameterType="magcard">
+		<selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="magcardId">
+			select wcs_use_magcard_s.nextval from dual
+		</selectKey>
+		insert into <include refid="tableName"/>(<include refid="addColumn"/>)
+		values(#{magcardId},#{cardNumber},#{amount},#{userId},#{status},#{version},#{creationBy},#{creationDate})
+	</insert>
+	
+	<!-- 充值磁卡信息 -->
+	<update id="updateRechargeMagcard" parameterType="magcard">
+		update <include refid="tableName"/>
+		<set>
+			amount=amount+#{amount},last_update_by=#{lastUpdateBy},last_update_date=#{lastUpdateDate}
+		</set>
+		<where>
+			magcard_id=#{magcardId}
+		</where>
+	</update>
+	<!-- 扣款磁卡金额 -->
+	<update id="updateCutPaymentMagcard" parameterType="magcard">
+		update <include refid="tableName"/>
+		<set>
+			amount=amount-#{amount},last_update_by=#{lastUpdateBy},last_update_date=#{lastUpdateDate}
+		</set>
+		<where>
+			magcard_id=#{magcardId}
+		</where>
+	</update>
+	
+	<!-- 注销磁卡 -->
+	<update id="cancelMagcard" parameterType="int">
+		update <include refid="tableName"/>
+		<set>
+			status='W004003'
+		</set>
+		<where>
+			magcard_id=#{magcardId}
+		</where>
+	</update>
+	
+	<!-- 删除磁卡信息 -->
+	<delete id="deleteMagcard" parameterType="int">
+		delete from <include refid="tableName"/> where magcard_id=#{magcardId}
+	</delete>
+	
+	<!-- 根据卡号查询磁卡信息 -->
+	<select id="queryMagacrdByNum" parameterType="String" resultMap="Magcard">
+		select <include refid="allColumn"/> from <include refid="tableName"/> where card_number=#{cardNumber}
+	</select>
+	
+	<!-- 根据磁卡ID获取磁卡信息 -->
+	<select id="queryMagcardById" parameterType="int" resultMap="Magcard">
+		select <include refid="allColumn"/> from <include refid="tableName"/> where magcard_id=#{magcardId}
+	</select>
+</mapper>

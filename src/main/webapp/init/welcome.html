@@ -1,0 +1,57 @@
+<div class="easyui-layout" data-options="fit:true">
+    <div class="not_charge" data-options="region:'center',title:'未缴费用户',split:true">
+        <table class="easyui-datagrid wcs_water_not_charge_list" data-options="rownumbers:true,
+                    singleSelect:true,
+                    autoRowHeight:false,
+                    striped:true,
+                    pagination:true,
+                    pageSize:30,fit:true,border:false">
+            <thead>
+            <tr>
+                <th data-options="filed:'chargeId',hidden:true" width="10%">用户</th>
+                <th data-options="field:'chargeCode',halign:'center'" width="200px">收费编码</th>
+                <th data-options="field:'waterMeterCode',halign:'center'" width="100px">水表编码</th>
+                <th data-options="field:'definiteNumber',halign:'center'" width="100px">用水量</th>
+                <th data-options="field:'price',halign:'center'" width="100px">水费价格</th>
+                <th data-options="field:'currentMonthMoney',halign:'center'" width="100px">应收金额</th>
+                <th data-options="field:'realPrice',halign:'center'" width="100px">实收金额</th>
+                <th data-options="field:'changeMoney',halign:'center'" width="80px">找零</th>
+                <th data-options="field:'chargeTypeName',halign:'center'" width="80px">收费类型</th>
+                <th data-options="field:'chargeStatusName',halign:'center'" width="80px">收费状态</th>
+                <th data-options="field:'userName',halign:'center'" width="80px">用户</th>
+                <th data-options="field:'copyMeterName',halign:'center'" width="80px">抄表人员</th>
+                <th data-options="field:'chargeEmpName',halign:'center'" width="80px">收费人员</th>
+                <th data-options="field:'chargeDate',halign:'center'" width="150px">收费时间</th>
+                <th data-options="field:'remarks',halign:'center'" width="200px">备注</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div data-options="region:'south',split:true,title:'未安装水表的用户',collapsible:false" style="height:250px;">
+    	<table class="easyui-datagrid wcs_not_install_water_meter_list" data-options="rownumbers:true,
+                    singleSelect:true,
+                    autoRowHeight:false,
+                    striped:true,
+                    pagination:true,
+                    pageSize:30,fit:true,border:false">
+            <thead>
+	           <tr>
+	           		<th data-options="filed:'waterMeterId',hidden:true">水表ID</th>
+	           		<th data-options="field:'waterMeterCode',halign:'center'" width="150px">水表编码</th>
+	           		<th data-options="field:'meterStatus',halign:'center'" width="100px">水表状态</th>
+	                <th data-options="field:'userName',halign:'center'" width="100px">用户</th>
+	                <th data-options="field:'homeAddress',halign:'center'" width="300px">用户地址</th>
+	                <th data-options="field:'appointmentInstallDate',halign:'center'" width="150px">预约安装日期</th>
+	                <th data-options="field:'changeMeterDate',halign:'center'" width="150px">换表日期</th>
+	                <th data-options="field:'changeMeterUpNumber',halign:'center'" width="100px">换表起方</th>
+	                <th data-options="field:'changeMeterCode',halign:'center'" width="150px">换表水表编码</th>
+	                <th data-options="field:'installDate',halign:'center'" width="150px">安装日期</th>
+	                <th data-options="field:'empName',halign:'center'" width="100px">安装人员</th>
+	                <th data-options="field:'isChangeMeter',halign:'center'" width="100px">是否换表</th>
+	                <th data-options="field:'isExecute',halign:'center'" width="100px">是否安装</th>
+	            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script type="text/javascript" src="../resources/js/init/welcome.js"></script>

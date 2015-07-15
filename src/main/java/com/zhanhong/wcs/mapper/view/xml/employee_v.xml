@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.view.EmployeeVMapper">
+	<!-- 结果集 -->
+	<resultMap type="employeeV" id="EmployeeV">
+		<id column="emp_id" property="empId"/>
+		<result column="emp_code" property="empCode"/>
+		<result column="account" property="account"/>
+		<result column="password" property="password"/>
+		<result column="true_name" property="trueName"/>
+		<result column="sex" property="sex"/>
+		<result column="sex_name" property="sexName"/>
+		<result column="mobile_telephone" property="mobileTelephone"/>
+		<result column="home_telephone" property="homeTelephone"/>
+		<result column="office_telephone" property="officeTelephone"/>
+		<result column="id_card" property="idCard"/>
+		<result column="birthday" property="birthday"/>
+		<result column="email" property="email"/>
+		<result column="address" property="address"/>
+		<result column="description" property="description"/>
+		<result column="role_name" property="roleName"/>
+	</resultMap>
+	
+	<!-- 查询用户 -->
+	<select id="queryEmployeeVAll" parameterType="employeeV" resultMap="EmployeeV">
+		select * from wcs_sys_employee_v
+		<where>
+			1=1
+			<if test="empCode!=null and empCode!=''">
+				and emp_code like upper(#{empCode})
+			</if>
+			<if test="account!=null and account!=''">
+				and account like #{account}
+			</if>
+			<if test="trueName!=null and trueName!=''">
+				and true_name like #{trueName}
+			</if>
+			<if test="sex!=null">
+				and sex=#{sex}
+			</if>
+		</where>
+		order by emp_id desc
+	</select>
+</mapper>

@@ -1,0 +1,77 @@
+<div class="easyui-layout" data-options="fit:true">
+	<div data-options="region:'north',border:false">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'north',border:false" style="text-align:right;padding:2px 10px 0px 0px">
+				<a href="javascript:queryPrice()" data-options="iconCls:'icon-search',plain:true" class="easyui-linkbutton">查询</a>
+				<a href="javascript:addPrice()" data-options="iconCls:'icon-add',plain:true" class="easyui-linkbutton">新增</a>
+				<a href="#" id="update_price" onclick="updatePrice()" data-options="iconCls:'icon-edit',plain:true" class="easyui-linkbutton">编辑</a>
+				<a href="#" id="delete_price" onclick="deletePrice()" data-options="iconCls:'icon-cancel',plain:true" class="easyui-linkbutton">删除</a>
+			</div>
+			<div data-options="region:'center',border:false" style="border-top:1px solid #d3d3d3;padding:10px 10px;">
+				<form id="wcs_price_search_form" method="post">
+					<table style="width: 100%" >
+						<tr>
+							<td align="right">水费价格从：</td>
+							<td><input type="text" name="price"/></td>
+							<td align="right">到：</td>
+							<td><input type="text" name="endPrice"/></td>
+							<td align="right">阶梯起量：</td>
+							<td><input type="text" name="ladderStartMeasure"/></td>
+							<td align="right">阶梯止量：</td>
+							<td><input type="text" name="ladderEndMeasure"/></td>
+						</tr>
+						<tr>
+							<td align="right">水费类型：</td>
+							<td><select class="easyui-combobox wcs_price_type" style="width:200px;height:25px;" name="priceType"></select></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div data-options="region:'center',border:false" style="border-top:1px solid #d3d3d3">
+		<table id="wcs_price_list" class="easyui-datagrid" data-options="rownumbers:true,
+                    singleSelect:true,
+                    autoRowHeight:false,
+                    fitColumns:true,
+                    striped:true,
+                    pagination:true,
+                    pageSize:30,fit:true,border:false">
+            <thead>
+           <tr>
+           		<th data-options="filed:'wpId',hidden:true">水价ID</th>
+           		<th data-options="field:'priceTypeName',halign:'center'" width="10%">水价类别</th>
+           		<th data-options="field:'price',halign:'center'" width="10%">水价价格</th>
+                <th data-options="field:'ladderStartMeasure',halign:'center'" width="10%">阶梯起量</th>
+                <th data-options="field:'ladderEndMeasure',halign:'center'" width="10%">阶梯止量</th>
+            </tr>
+            </thead>
+        </table>
+	</div>
+</div>
+<!-- 保存数据字典弹窗 -->
+<div id="wcs_save_price_win">
+	<form id="wcs_save_price_form" method="post">
+		<div class="wcs_form_block">
+			<label>水价类别：</label>
+			<input type="hidden" name="wpId"/>
+			<select class="easyui-combobox wcs_price_type" style="width:200px;height:25px;" name="priceType"></select>
+		</div>
+		<div class="wcs_form_block">
+			<label>水费价格：</label>
+			<input type="text" class="easyui-numberbox" data-options="min:3.5,precision:2" name="price" required="required"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>阶梯起量：</label>
+			<input type="text" class="easyui-numberbox" data-options="min:0" name="ladderStartMeasure" required="required"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>阶梯止量：</label>
+			<input type="text" class="easyui-numberbox" data-options="min:0" name="ladderEndMeasure" required="required"/>
+		</div>
+	</form>
+</div>
+<script type="text/javascript" src="../resources/js/sys/water_price_mang.js"></script>
+<script type="text/javascript">
+	loadPage();
+</script>

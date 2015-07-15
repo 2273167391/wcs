@@ -1,0 +1,29 @@
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'west',border:false" style="width:600px" class="wcs_main_content">
+    	<table class="easyui-datagrid wcs_role_list" data-options="rownumbers:true,
+                    singleSelect:true,
+                    autoRowHeight:false,
+                    fitColumns:true,
+                    striped:true,
+                    pagination:true,
+                    pageSize:30,fit:true">
+            <thead>
+           <tr>
+           		<th data-options="field:'roleId',hidden:true">角色ID</th>
+                <th data-options="field:'roleName',halign:'center'" width="10%">角色名称</th>
+                <th data-options="field:'roleTypeName',halign:'center'" width="10%">角色类型</th>
+                <th data-options="field:'description',halign:'center'" width="10%">描述</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    
+    <div data-options="region:'center',border:false" style="border-left:1px solid #d3d3d3">
+        <div data-options="region:'north',height:35" style="text-align: right;padding-top:5px;padding-right:10px;border-bottom:1px solid #d3d3d3">
+			<a class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="saveRoleMenu()">保存</a>
+		</div>
+		<div data-options="region:'center'" style="padding:10px"><ul class="wcs_menu_tree"></ul></div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../resources/js/sys/role_menu.js"></script>

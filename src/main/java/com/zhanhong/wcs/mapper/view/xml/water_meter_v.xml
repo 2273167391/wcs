@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.view.WaterMeterVMapper">
+	<!-- 结果集 -->
+	<resultMap type="waterMeterV" id="WaterMeterV">
+		<id column="water_meter_id" property="waterMeterId"/>
+		<result column="water_meter_code" property="waterMeterCode"/>
+		<result column="user_id" property="userId"/>
+		<result column="user_name" property="userName"/>
+		<result column="home_address" property="homeAddress"/>
+		<result column="emp_id" property="empId"/>
+		<result column="emp_name" property="empName"/>
+		<result column="change_meter_date" property="changeMeterDate"/>
+		<result column="change_meter_up_number" property="changeMeterUpNumber"/>
+		<result column="change_meter_code" property="changeMeterCode"/>
+		<result column="appointment_install_date" property="appointmentInstallDate"/>
+		<result column="install_date" property="installDate"/>
+		<result column="version" property="version"/>
+		<result column="creation_by" property="creationBy"/>
+		<result column="creation_name" property="creationName"/>
+		<result column="creation_date" property="creationDate"/>
+		<result column="last_update_by" property="lastUpdateBy"/>
+		<result column="last_update_name" property="lastUpdateName"/>
+		<result column="last_update_date" property="lastUpdateDate"/>
+		<result column="is_change_meter" property="isChangeMeter"/>
+		<result column="is_execute" property="isExecute"/>
+		<result column="meter_status_code" property="meterStatusCode"/>
+		<result column="meter_status" property="meterStatus"/>
+	</resultMap>
+	
+	<!-- 所有字段 -->
+	<sql id="allColumn">
+		water_meter_id,water_meter_code,user_id,user_name,home_address,emp_id,emp_name,change_meter_date,
+		change_meter_up_number,change_meter_code,appointment_install_date,install_date,version,creation_by,
+		creation_name,creation_date,last_update_by,last_update_name,last_update_date,is_change_meter,is_execute,meter_status_code,meter_status
+	</sql>
+	
+	<!-- 获取所有用户水表 -->
+	<select id="queryWaterMeter" parameterType="waterMeterV" resultMap="WaterMeterV">
+		select <include refid="allColumn"/> from wcs_use_water_meter_v
+		<where>
+			1=1
+			<if test="userId!=null">
+				and user_id=#{userId}
+			</if>
+			<if test="empId!=null">
+				and emp_id=#{empId}
+			</if>
+			<if test="waterMeterCode!=null and waterMeterCode!=''">
+				and water_meter_code=#{waterMeterCode}
+			</if>
+			<if test="appointmentInstallDate!=null">
+				and to_char(appointment_install_date,'yyyy-MM-dd')&gt;=to_char(#{appointmentInstallDate},'yyyy-MM-dd')
+			</if>
+			<if test="endAppointmentInstallDate!=null">
+				and to_char(appointment_install_date,'yyyy-MM-dd')&lt;=to_char(#{endAppointmentInstallDate},'yyyy-MM-dd')
+			</if>
+			<if test="installDate!=null">
+				and to_char(install_date,'yyyy-MM-dd')&gt;=to_char(#{installDate},'yyyy-MM-dd')
+			</if>
+			<if test="endInstallDate!=null">
+				and to_char(install_date,'yyyy-MM-dd')&lt;=to_char(#{endInstallDate},'yyyy-MM-dd')
+			</if>
+			<if test="changeMeterDate!=null">
+				and to_char(change_meter_date,'yyyy-MM-dd')&gt;=to_char(#{changeMeterDate},'yyyy-MM-dd')
+			</if>
+			<if test="endChangeMeterDate!=null">
+				and to_char(change_meter_date,'yyyy-MM-dd')&lt;=to_char(#{endChangeMeterDate},'yyyy-MM-dd')
+			</if>
+			<if test="isChangeMeter!=null and isChangeMeter!=''">
+				and is_change_meter=#{isChangeMeter}
+			</if>
+			<if test="isExecute!=null and isExecute!=''">
+				and is_execute=#{isExecute}
+			</if>
+			<if test="meterStatusCode!=null and meterStatusCode!=''">
+				and meter_status_code=#{meterStatusCode}
+			</if>
+		</where>
+		order by creation_date desc
+	</select>
+	
+	<!-- 获取未安装的水表 -->
+	<select id="queryNotInstallWaterMeter" resultMap="WaterMeterV">
+		select <include refid="allColumn"/> from wcs_use_water_meter_v
+		<where>meter_status_code='W006001'</where>
+	</select>
+	
+	<!-- 根据用户ID查询水表 -->
+	<select id="queryMeterByUserId" parameterType="int" resultMap="WaterMeterV">
+		select <include refid="allColumn"/> from wcs_use_water_meter_v
+		<where>
+			user_id=#{userId}
+		</where>
+		order by creation_date desc
+	</select>
+	
+	<!-- 根据水表ID查询水表 -->
+	<select id="queryWaterMeterById" parameterType="int" resultMap="WaterMeterV">
+		select <include refid="allColumn"/> from wcs_use_water_meter_v
+		<where>
+			water_meter_id=#{waterMeterId}
+		</where>
+	</select>
+	
+	<!-- 根据换表编码查询水表 -->
+	<select id="queryChargeMeter" parameterType="java.lang.String" resultMap="WaterMeterV">
+		select <include refid="allColumn"/> from wcs_use_water_meter_v
+		<where>
+			change_meter_code=#{changeMeterCode}
+		</where>
+	</select>
+</mapper>

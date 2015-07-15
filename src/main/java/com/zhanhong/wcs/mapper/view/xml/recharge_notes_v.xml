@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.view.RechargeNotesVMapper">
+	<!-- 结果集 -->
+	<resultMap type="rechangeNotesV" id="RechangeNotesV">
+		<id column="recharge_id" property="rechargeId"/>
+		<result column="serial_number" property="serialNumber"/>
+		<result column="magcard_id" property="magcardId"/>
+		<result column="card_number" property="cardNumber"/>
+		<result column="recharge_money" property="rechargeMoney"/>
+		<result column="balance" property="balance"/>
+		<result column="remarks" property="remarks"/>
+		<result column="is_expend" property="isExpend"/>
+		<result column="recharge_expense" property="rechargeExpense"/>
+		<result column="user_id" property="userId"/>
+		<result column="user_name" property="userName"/>
+		<result column="creation_by" property="creationBy"/>
+		<result column="creation_name" property="creationName"/>
+		<result column="creation_date" property="creationDate"/>
+	</resultMap>
+	
+	<!-- 所有字段 -->
+	<sql id="allColumn">
+		recharge_id,serial_number,magcard_id,card_number,recharge_money,balance,remarks,is_expend,recharge_expense,user_id,user_name,creation_by,creation_name,creation_date
+	</sql>
+	
+	<!-- 查询记录 -->
+	<select id="queryRechargeNotesAll" parameterType="rechangeNotesV" resultMap="RechangeNotesV">
+		select <include refid="allColumn"/> from wcs_cost_recharge_notes_v
+		<where>
+			1=1
+			<if test="cardNumber!=null and cardNumber!=''">
+				and card_number=#{cardNumber}
+			</if>
+			<if test="userId!=null">
+				and user_id=#{userId}
+			</if>
+			<if test="isExpend!=null">
+				and is_expend=#{isExpend}
+			</if>
+			<if test="creationBy!=null">
+				and creation_by=#{creationBy}
+			</if>
+			<if test="creationDate!=null">
+				and to_char(creation_date,'yyyy-MM-dd')&gt;=to_char(#{creationDate},'yyyy-MM-dd')
+			</if>
+			<if test="endCreationDate!=null">
+				and to_char(creation_date,'yyyy-MM-dd')&lt;=to_char(#{endCreationDate},'yyyy-MM-dd')
+			</if>
+		</where>
+		order by creation_date desc
+	</select>
+	
+	<!-- 根据磁卡ID查询记录 -->
+	<select id="queryRechargeNotesByMagcardId" parameterType="java.util.Map" resultMap="RechangeNotesV">
+		select <include refid="allColumn"/> from wcs_cost_recharge_notes_v
+		<where>
+			magcard_id=#{magcardId} and is_expend=#{isExpend}
+		</where>
+		order by creation_date desc
+	</select>
+</mapper>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.WaterPriceMapper">
+	<!-- 结果集 -->
+	<resultMap type="waterPrice" id="WaterPrice">
+		<id column="wp_id" property="wpId"/>
+		<result column="price_type" property="priceType"/>
+		<result column="price" property="price"/>
+		<result column="ladder_start_measure" property="ladderStartMeasure"/>
+		<result column="ladder_end_measure" property="ladderEndMeasure"/>
+		<result column="version" property="version"/>
+		<result column="creation_by" property="creationBy"/>
+		<result column="creation_date" property="creationDate"/>
+		<result column="last_update_by" property="lastUpdateBy"/>
+		<result column="last_update_date" property="lastUpdateDate"/>
+	</resultMap>
+	
+	<!-- 添加字段 -->
+	<sql id="addColumn">
+		wp_id,price_type,price,ladder_start_measure,ladder_end_measure,version,creation_by,creation_date
+	</sql>
+	
+	<!-- 所有字段 -->
+	<sql id="allColumn">
+		<include refid="addColumn"/>,last_update_by,last_update_date
+	</sql>
+	<!-- 表名 -->
+	<sql id="tableName">wcs_sys_water_price</sql>
+	
+	<!-- 添加水价 -->
+	<insert id="addWaterPrice" parameterType="waterPrice">
+		insert into <include refid="tableName"/>(<include refid="addColumn"/>)
+		values(wcs_sys_water_price_s.nextval,#{priceType},#{price},#{ladderStartMeasure},#{ladderEndMeasure},#{version},#{creationBy},#{creationDate})
+	</insert>
+	<!-- 修改水价 -->
+	<update id="updateWaterPrice" parameterType="waterPrice">
+		update <include refid="tableName"/> 
+		<set>
+			<if test="priceType!=null">
+				price_type=#{priceType}
+			</if>
+			<if test="price!=null">
+				,price=#{price}
+			</if>
+			<if test="ladderStartMeasure!=null">
+				,ladder_start_measure=#{ladderStartMeasure}
+			</if>
+			<if test="ladderEndMeasure!=null">
+				,ladder_end_measure=#{ladderEndMeasure}
+			</if>
+			,last_update_by=#{lastUpdateBy},last_update_date=#{lastUpdateDate}
+		</set>
+		<where>
+			wp_id=#{wpId}
+		</where>
+	</update>
+	<!-- 删除水价 -->
+	<delete id="deleteWaterPrice" parameterType="int">
+		delete from <include refid="tableName"/> where wp_id=#{wpId}
+	</delete>
+	
+	<!-- 根据水价ID获取水价 -->
+	<select id="queryWaterPriceById" resultMap="WaterPrice" parameterType="String">
+		select <include refid="allColumn"/> from <include refid="tableName"/> 
+		<where>wp_id=#{wpId}</where>
+	</select>
+	
+	<!-- 判断水价是否存在 -->
+	<select id="isJudgePrice" parameterType="waterPrice" resultType="int">
+		select count(*) from <include refid="tableName"/> 
+		<where>
+			price_type=#{priceType} and price=#{price} and ladder_start_measure=#{ladderStartMeasure} and ladder_end_measure=#{ladderEndMeasure}
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,105 @@
+<div class="easyui-layout" data-options="fit:true">
+	<div data-options="region:'north',border:false">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'north',border:false" style="text-align:right;padding:2px 10px 0px 0px">
+				<a href="javascript:queryWaterCharge()" data-options="iconCls:'icon-search',plain:true" class="easyui-linkbutton">查询</a>
+				<a href="#" onclick="waterCharge()" id="water_charge" data-options="iconCls:'icon-cancel',plain:true" class="easyui-linkbutton">收费</a>
+				<a href="#" onclick="deleteNotes()" id="dele_water_charge" data-options="iconCls:'icon-cancel',plain:true" class="easyui-linkbutton">删除</a>
+			</div>
+			<div data-options="region:'center',border:false" style="border-top:1px solid #d3d3d3;padding:10px 10px;">
+				<form id="wcs_water_charge_search_form" method="post">
+					<table style="width: 100%" >
+						<tr>
+							<td align="right">水表编码：</td>
+							<td><select class="easyui-combobox wcs_meter_code" style="width:200px;height:25px;" name="waterMeterId"></select></td>
+							<td align="right">收费类型：</td>
+							<td><select class="easyui-combobox wcs_charge_type" style="width:200px;height:25px;" name="chargeType"></select></td>
+							<td align="right">收费状态：</td>
+							<td><select class="easyui-combobox wcs_charge_status" style="width:200px;height:25px;" name="chargeStatus"></select></td>
+							<td align="right">收费人员：</td>
+							<td><select class="easyui-combobox wcs_charge_emp" style="width:200px;height:25px;" name="chargeEmpId"></select></td>
+						</tr>
+						<tr>
+							<td align="right">用户：</td>
+							<td><select class="easyui-combobox wcs_user" style="width:200px;height:25px;" name="userId"></select></td>
+							<td align="right">收费时间：</td>
+							<td><input type="text" class="easyui-datebox start_charge_date" name="chargeEmpDate"/></td>
+							<td align="right">到：</td>
+							<td><input type="text" class="easyui-datebox end_charge_date" name="endChargeEmpDate"/></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div data-options="region:'center',border:false" style="border-top:1px solid #d3d3d3">
+		<table class="easyui-datagrid wcs_water_charge_list" data-options="rownumbers:true,
+                    singleSelect:true,
+                    autoRowHeight:false,
+                    striped:true,
+                    pagination:true,
+                    pageSize:30,fit:true,border:false">
+            <thead>
+           <tr>
+           		<th data-options="filed:'chargeId',hidden:true">收费ID</th>
+           		<th data-options="field:'chargeCode',halign:'center'" width="200px">收费编码</th>
+                <th data-options="field:'waterMeterCode',halign:'center'" width="100px">水表编码</th>
+                <th data-options="field:'definiteNumber',halign:'center'" width="100px">用水量</th>
+                <th data-options="field:'price',halign:'center'" width="100px">水费价格</th>
+                <th data-options="field:'currentMonthMoney',halign:'center'" width="100px">应收金额</th>
+                <th data-options="field:'realPrice',halign:'center'" width="100px">实收金额</th>
+                <th data-options="field:'changeMoney',halign:'center'" width="80px">找零</th>
+                <th data-options="field:'chargeTypeName',halign:'center'" width="80px">收费类型</th>
+                <th data-options="field:'chargeStatusName',halign:'center',styler:noteStyle" width="80px">收费状态</th>
+                <th data-options="field:'userName',halign:'center'" width="80px">用户</th>
+                <th data-options="field:'copyMeterName',halign:'center'" width="80px">抄表人员</th>
+                <th data-options="field:'chargeEmpName',halign:'center'" width="80px">收费人员</th>
+                <th data-options="field:'chargeDate',halign:'center'" width="150px">收费时间</th>
+                <th data-options="field:'remarks',halign:'center'" width="200px">备注</th>
+            </tr>
+            </thead>
+        </table>
+	</div>
+</div>
+<div id="wcs_save_water_charge_win">
+	<form class="wcs_save_water_charge_form" method="post">
+		<div class="wcs_form_block">
+			<label>收费编码：</label>
+			<input type="hidden" name="chargeId"/>
+			<input type="hidden" name="userId"/>
+			<input type="text" name="chargeCode" readonly="readonly"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>使用量：</label>
+			<input type="text" readonly="readonly" name="definiteNumber"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>水费价格：</label>
+			<input type="text" readonly="readonly" name="price"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>应收金额：</label>
+			<input type="text" class="month_money" readonly="readonly" name="currentMonthMoney"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>收费类型：</label>
+			<select class="easyui-combobox wcs_charge_type" style="width:200px;height:25px;" name="chargeType" required="required"></select>
+		</div>
+		<div class="wcs_form_block">
+			<label>实收金额：</label>
+			<input type="text" class="easyui-numberbox real_price" name="realPrice" data-options="min:0"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>找零：</label>
+			<input type="text" class="change_money" readonly="readonly" value="0" name="changeMoney"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>备注：</label>
+			<input type="text" name="remarks" class="remarks"/>
+		</div>
+	</form>
+</div>
+<script type="text/javascript" src="../resources/js/cost/water_charge.js"></script>
+<script type="text/javascript">
+	loadPage();
+</script>

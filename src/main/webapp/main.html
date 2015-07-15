@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <meta  charset="UTF-8">
+    <title>水电收费系统</title>
+    <link rel="shortcut icon" type="image/ico" href="../resources/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="../resources/easyui/themes/gray/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="../resources/easyui/themes/icon.css"/>
+    <link rel="stylesheet" type="text/css" href="../resources/css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="../resources/css/index.css"/>
+</head>
+<body class="easyui-layout">
+<!--页头部分-->
+<div data-options="region:'north',split:true" class="wcs_main_header">
+    <div class="easyui-layout" data-options="fit:true">
+        <div data-options="region:'west',border:false"  style="width:350px" class="wcs_header_log"></div>
+        <div data-options="region:'center',border:false"  class="easyui-layout">
+            <div data-options="region:'center',border:false" class="wcs_header_wel_info">
+               	 您好，${user.account}&nbsp;!
+               	 <a href="javascript:roleChanging()" class="wcs_icon_style wcs_icon_role" title="角色切换"></a>
+               	 <a href="javascript:updatePwd()" class="wcs_icon_style wcs_icon_up_pwd" title="密码修改"></a>
+               	 <a href="javascript:exitSys()" class="wcs_icon_style wcs_icon_logout" title="退出"></a>
+            </div>
+        </div>
+    </div>
+</div>
+<!--菜单部分-->
+<div data-options="region:'west',title:'菜单选项',split:true,iconCls:'icon-menu'" class="wcs_main_menus">
+    <div class="easyui-accordion" data-options="fit:true,border:false" id="wcs_menus"></div>
+</div>
+<!--主体部分-->
+<div data-options="region:'center',split:true,border:false">
+    <div class="easyui-tabs" data-options="fit:true" id="wcs_main_tabs">
+
+    </div>
+</div>
+<!--页脚部分-->
+<div data-options="region:'south',split:true" class="wcs_main_footer">广州展宏信息科技有限公司</div>
+<!-- 角色选择窗口 -->
+<div class="wcs_role_container">
+ <div id="wcs_role_win" style="padding:10px;text-align:center">
+ 	<select id="wcs_role" class="easyui-combobox" style="width:150px"></select>
+ </div>
+</div>
+<!-- 修改密码窗口 -->
+<div id="wcs_update_pwd">
+	<form class="wcs_update_pwd_form" method="post">
+		<div class="wcs_form_block">
+			<label>原密码：</label>
+			<input type="text" class="easyui-validatebox" name="pwd" required="required"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>新密码：</label>
+			<input type="text" class="easyui-validatebox new_pwd" name="newPwd" required="required"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>确认密码：</label>
+			<input type="text" class=" easyui-validatebox confirm_pwd" name="confirmPwd" required="required"/>
+		</div>
+	</form>
+</div>
+<!--Jquery-->
+<script type="text/javascript" src="../resources/jquery/jquery-1.10.2.js"></script>
+<!--EasyUI-->
+<script type="text/javascript" src="../resources/easyui/jquery.easyui.min.js"></script>
+<!--EasyUI国际化文件-->
+<script type="text/javascript" src="../resources/easyui/local/easyui-lang-zh_CN.js"></script>
+<!-- Layer -->
+<script type="text/javascript" src="../resources/layer/layer.js"></script>
+<!-- 加载菜单 -->
+<script type="text/javascript" src="../menu" charset="utf-8"></script>
+<script type="text/javascript" src="../resources/js/common.js"></script>
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function(){
+        //初始化欢迎页
+        $("#wcs_main_tabs").tabs('add',{
+            title:'欢迎页',
+            href:'../init/welcome.html'
+        });
+        
+        //遍历获取到的菜单数据
+        for(var i=0;i<menus.length;i++){
+        	 var childMenu="";
+        	 for(var j=0;j<menus[i].children.length;j++){
+        	 	var children=menus[i].children[j];//子菜单
+        	 	childMenu=childMenu+"<p url=\"../"+children.url+"\" onClick=\"handlerMenu(this)\">"+children.name+"</p>";
+        	 }
+        	 //添加菜单
+        	 $("#wcs_menus").accordion('add',{
+        	 	iconCls:"icon-menu-c",
+	        	title:menus[i].name,
+	        	content:childMenu,
+	        	selected:i==0?true:false
+	        });
+        }
+    });
+    /**
+     * 菜单操作
+     */
+    function handlerMenu(obj){
+    	//还原所有菜单选项样式
+		$("#wcs_menus p").each(function(){$(this).css({'background':'#ffffff url(\'../resources/images/ico05.png\') no-repeat 10px center','color':'#000000'});});
+		//设置选中的菜单样式
+		$(obj).css({'background':'rgba(0,146,220,0.8) url(\'../resources/images/ico05.png\') no-repeat 10px center','color':'#ffffff'});
+    	//操作选项卡
+		handlerTabs($(obj));
+    }
+
+    /**
+     * 退出系统
+     */
+    function exitSys(){
+        $.messager.confirm("退出提示","确定要退出系统么？",function(r){
+            if(r){
+                location.href='../logout';
+            }
+        });
+    }
+
+    /**
+     * 操作选项卡
+     * @param obj
+     */
+    function handlerTabs(obj){
+        //获取Tabs对象
+        var mainTabs=$("#wcs_main_tabs");
+        //如果选项卡存在，直接打开选项卡，不存在则添加一个新的
+        if(mainTabs.tabs('exists',obj.text())){
+            //获取面板
+            mainTabs.tabs('select',obj.text());
+        }else {
+            //添加选项卡
+            mainTabs.tabs('add',{
+                title:obj.text(),
+                href:obj.attr("url"),
+                closable:true
+            });
+        }
+    }
+    
+    //角色切换
+    function roleChanging(){
+    	$(".wcs_role_container").dialog({
+    		title : "角色选择",
+    		iconCls : "icon-role",
+			width : 200,
+			height : 115,
+			modal : true,
+			buttons:[{
+				iconCls:"icon-confirm",
+				text:"确定",
+				plain:true,
+				handler:function(){
+					location.href = "../main/" + $("#wcs_role").combobox('getValue');
+				}
+			}]
+    	});
+    	
+    	// 下拉框
+		$("#wcs_role").combobox({
+			valueField : "roleId",
+			textField : "roleName",
+			url:"../base/common/emp/role",
+			onLoadSuccess : function(node) {
+				$(this).combobox('setValue', node[0].roleId);
+			}
+		});
+    }
+    
+    //修改密码
+    function updatePwd(){
+    	$("#wcs_update_pwd").dialog({
+    		title:"修改密码",
+    		width:350,
+    		height:180,
+    		modal:true,
+    		buttons:[{
+    			iconCls:"icon-save",
+    			text:"修改",
+    			plain:true,
+    			handler:function(){
+    				//加载框
+    				var index=layer.load();
+    				$(".wcs_update_pwd_form").form("submit",{
+    					url:"../update_pwd",
+    					onSubmit:function(param){
+    						//判断密码是否一致
+    						var new_pwd=$(".new_pwd").val();
+    						var confirm_pwd=$(".confirm_pwd").val();
+    						var isValid=$(this).form("validate");
+    						if(new_pwd.length<6){
+    							$.messager.alert("提示框","新密码长度必须大于等于6个字符！","info");
+    							isValid=false;
+    						}
+    						if(new_pwd!=confirm_pwd){
+    							$.messager.alert("提示框","两次密码输入不一致！","info");
+    							isValid=false;
+    						}
+    						if(!isValid){
+    							layer.close(index);
+    						}
+    						return isValid;
+    					},success:function(data){
+    						data=jQuery.parseJSON(data);
+    						if(data.result==1){
+    							$("#wcs_update_pwd").dialog("close");//关闭修改密码窗口
+    						}
+    						$.messager.alert("提示框",data.message,"info");
+    						layer.close(index);//关闭加载框
+    					}
+    				});
+    			}
+    		}]
+    	});
+    }
+</script>
+</body>
+</html>

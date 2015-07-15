@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.EmployeeMapper">
+
+	<!-- 结果集合 -->
+	<resultMap type="employee" id="Employee">
+		<id column="emp_id" property="empId"/>
+		<result column="emp_code" property="empCode"/>
+		<result column="account" property="account"/>
+		<result column="true_name" property="trueName"/>
+		<result column="sex" property="sex"/>
+		<result column="mobile_telephone" property="mobileTelephone"/>
+		<result column="home_telephone" property="homeTelephone"/>
+		<result column="office_telephone" property="officeTelephone"/>
+		<result column="id_card" property="idCard"/>
+		<result column="birthday" property="birthday"/>
+		<result column="email" property="emial"/>
+		<result column="address" property="address"/>
+		<result column="password_change_date" property="passwordChangeDate"/>
+		<result column="description" property="description"/>
+		<result column="version" property="version"/>
+		<result column="creation_by" property="creationBy"/>
+		<result column="creation_date" property="creationDate"/>
+		<result column="last_update_by" property="lastUpdateBy"/>
+		<result column="last_update_date" property="lastUpdateDate"/>
+	</resultMap>
+	
+	<!-- 查询字段 -->
+	<sql id="queryColumn">
+		emp_id,
+		emp_code,
+		account,
+		password,
+		true_name,
+		sex,
+		mobile_telephone,
+		home_telephone,
+		office_telephone,
+		id_card,birthday,
+		email,address,
+		password_change_date,
+		description,
+		creation_by,
+		creation_date,
+		last_update_by,
+		last_update_date
+	</sql>
+	
+	<!-- 添加字段 -->
+	<sql id="addColumn">
+		emp_id,
+		emp_code,
+		account,
+		password,
+		true_name,
+		sex,
+		mobile_telephone,
+		home_telephone,
+		office_telephone,
+		id_card,
+		birthday,
+		email,
+		address,
+		description,
+		version,
+		creation_by,
+		creation_date
+	</sql>
+	
+	<!-- 表名 -->
+	<sql id="tableName">wcs_sys_employee</sql>
+	<!-- 添加职员 -->
+	<insert id="addEmployee" parameterType="employee">
+		insert into <include refid="tableName"/>(<include refid="addColumn"/>) 
+		values(wcs_sys_employee_s.nextval,
+		#{empCode},#{account},#{password},
+		#{trueName},#{sex},
+		<choose>
+			<when test="mobileTelephone!=null">#{mobileTelephone}</when>
+			<otherwise>null</otherwise>
+		</choose>,
+		<choose>
+			<when test="homeTelephone!=null">#{homeTelephone}</when>
+			<otherwise>null</otherwise>
+		</choose>,
+		<choose>
+			<when test="officeTelephone!=null">#{officeTelephone}</when>
+			<otherwise>null</otherwise>
+		</choose>,
+		<choose>
+			<when test="idCard!=null">#{idCard}</when>
+			<otherwise>null</otherwise>
+		</choose>,
+		<choose>
+			<when test="birthday!=null">#{birthday}</when>
+			<otherwise>null</otherwise>
+		</choose>,
+		<choose>
+			<when test="email!=null">#{email}</when>
+			<otherwise>null</otherwise>
+		</choose>,
+		<choose>
+			<when test="address!=null">#{address}</when>
+			<otherwise>null</otherwise>
+		</choose>,
+		<choose>
+			<when test="description!=null">#{description}</when>
+			<otherwise>null</otherwise>
+		</choose>,#{version},#{creationBy},#{creationDate})
+	</insert>
+	
+	<!-- 更新职员 -->
+	<update id="updateEmployee" parameterType="employee">
+		update <include refid="tableName"/> 
+		<set>
+			true_name=#{trueName}
+			<if test="sex != null">
+				,sex=#{sex}
+			</if>
+			<if test="mobileTelephone!=null and mobileTelephone!=''">
+				,mobile_telephone=#{mobileTelephone}
+			</if>
+			<if test="homeTelephone!=null and homeTelephone!=''">
+				,home_telephone=#{homeTelephone}
+			</if>
+			<if test="officeTelephone!=null and officeTelephone!=''">
+				,office_telephone=#{officeTelephone}
+			</if>
+			<if test="idCard!=null and idCard!=''">
+				,id_card=#{idCard}
+			</if>
+			<if test="birthday!=null">
+				,birthday=#{birthday}
+			</if>
+			<if test="email!=null and email!=''">
+				,email=#{email}
+			</if>
+			<if test="address!=null and address!=''">
+				,address=#{address}
+			</if>
+			<if test="description!=null and description!=''">
+				,description=#{description}
+			</if>
+			,last_update_by=#{lastUpdateBy}
+			,last_update_date=#{lastUpdateDate}
+		</set>
+		<where>
+			emp_id=#{empId}
+		</where>
+	</update>
+	
+	<!-- 修改职员密码 -->
+	<update id="updateEmpPwd" parameterType="Map">
+		update <include refid="tableName"/>
+		<set>password=#{password}</set>
+		<where>emp_id=#{empId}</where>
+	</update>
+	
+	<!-- 删除职员信息 -->
+	<delete id="deleteEmployee" parameterType="int">
+		delete from <include refid="tableName"/>
+		<where>emp_id=#{empId}</where>
+	</delete>
+	
+	<!-- 根据帐户名或编码查询信息 -->
+	<select id="queryEmployeeByAccount" parameterType="String" resultMap="Employee">
+		select <include refid="queryColumn"/> from <include refid="tableName"/>
+		<where>account=#{user} or emp_code=#{user}</where>
+	</select>
+	
+	<!-- 根据角色ID查询职员信息 -->
+	<select id="queryEmployeeByRole" resultMap="Employee" parameterType="int">
+		select e.* from wcs_sys_employee_role er
+		left join <include refid="tableName"/> e on er.emp_id=e.emp_id
+		where er.role_id=#{roleId}
+	</select>
+	
+	<!-- 根据角色获取未分配角色的用户 -->
+	<select id="queryNotRoleEmpByRoleId" parameterType="int" resultMap="Employee">
+		select <include refid="queryColumn"/> from <include refid="tableName"/> se 
+		<where> 
+			se.emp_id not in (select er.emp_id from wcs_sys_employee_role er where er.role_id=#{roleId})
+		</where>
+	</select>
+	
+	<!-- 根据角色类型获取职员信息 -->
+	<select id="queryEmployeeByRoleType" parameterType="String" resultMap="Employee">
+		select distinct se.* from wcs_sys_employee se
+		left join wcs_sys_employee_role ser on ser.emp_id=se.emp_id
+		left join wcs_sys_role sr on ser.role_id=sr.role_id
+		left join wcs_sys_roletype srt on srt.roletype_id=sr.role_type_id
+		where srt.roletype_code=#{roleType}
+	</select>
+</mapper>

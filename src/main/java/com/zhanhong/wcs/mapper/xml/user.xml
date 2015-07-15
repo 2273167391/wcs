@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.UserMapper">
+	<!-- 结果集 -->
+	<resultMap type="user" id="User">
+		<id column="user_id" property="userId"/>
+		<result column="user_code" property="userCode"/>
+		<result column="user_name" property="userName"/>
+		<result column="mobile_telephone" property="mobileTelephone"/>
+		<result column="home_telephone" property="homeTelephone"/>
+		<result column="id_card" property="idCard"/>
+		<result column="status" property="status"/>
+		<result column="user_type" property="userType"/>
+		<result column="street_id" property="streetId"/>
+		<result column="home_address" property="homeAddress"/>
+		<result column="remarks" property="remarks"/>
+		<result column="version" property="version"/>
+		<result column="creation_by" property="creationBy"/>
+		<result column="creation_date" property="creationDate"/>
+		<result column="last_update_by" property="lastUpdateBy"/>
+		<result column="last_update_date" property="lastUpdateDate"/>
+	</resultMap>
+	<!-- 添加字段 -->
+	<sql id="addColumn">
+		user_id,user_code,user_name,mobile_telephone,home_telephone,id_card,status,user_type,street_id,home_address,remarks,version,creation_by,creation_date
+	</sql>
+	
+	<!-- 所有字段 -->
+	<sql id="allColumn">
+		<include refid="addColumn"/>,last_update_by,last_update_date
+	</sql>
+	
+	<!-- 表名 -->
+	<sql id="tableName">wcs_use_user</sql>
+	
+	<!-- 添加用户 -->
+	<insert id="addUser" parameterType="user">
+		insert into <include refid="tableName"/>(<include refid="addColumn"/>)
+		values(wcs_use_user_s.nextval,#{userCode},#{userName},
+		<choose>
+			<when test="mobileTelephone!=null">#{mobileTelephone}</when>
+			<otherwise>null</otherwise>
+		</choose>,
+		<choose>
+			<when test="homeTelephone!=null">#{homeTelephone}</when>
+			<otherwise>null</otherwise>
+		</choose>,
+		#{idCard},#{status},#{userType},#{streetId},
+		<choose>
+			<when test="homeAddress!=null">#{homeAddress}</when>
+			<otherwise>null</otherwise>
+		</choose>,
+		<choose>
+			<when test="remarks!=null">#{remarks}</when>
+			<otherwise>null</otherwise>
+		</choose>,#{version},#{creationBy},#{creationDate})
+	</insert>
+	
+	<!-- 更新用户 -->
+	<update id="updateUser" parameterType="user">
+		update <include refid="tableName"/>
+		<set>
+			<if test="userName!=null">
+				user_name=#{userName}
+			</if>
+			<if test="mobileTelephone!=null">
+				,mobile_telephone=#{mobileTelephone}
+			</if>
+			<if test="homeTelephone!=null">
+				,home_telephone=#{homeTelephone}
+			</if>
+			<if test="idCard!=null">
+				,id_card=#{idCard}
+			</if>
+			<if test="status!=null">
+				,status=#{status}
+			</if>
+			<if test="userType!=null">
+				,user_type=#{userType}
+			</if>
+			<if test="streetId!=null">
+				,street_id=#{streetId}
+			</if>
+			<if test="homeAddress!=null">
+				,home_address=#{homeAddress}
+			</if>
+			<if test="remarks!=null">
+				,remarks=#{remarks}
+			</if>
+			,last_update_by=#{lastUpdateBy},last_update_date=#{lastUpdateDate}
+		</set>
+		<where>
+			user_id=#{userId}
+		</where>
+	</update>
+	
+	<!-- 根据用户名或编码查询用户 -->
+	<select id="queryUserByName" parameterType="String" resultMap="User">
+		select <include refid="allColumn"/> from <include refid="tableName"/> 
+		<where>
+			user_code=#{user} or user_name=#{user}
+		</where>
+	</select>
+	
+	<!-- 根据用户ID获取用户 -->
+	<select id="queryUserById" parameterType="int" resultMap="User">
+		select <include refid="allColumn"/> from <include refid="tableName"/> 
+		<where>user_id=#{userId}</where>
+	</select>
+	
+	<!-- 删除用户 -->
+	<update id="deleteUser" parameterType="int">
+		update <include refid="tableName"/> set status='W002003' where user_id=#{userId}
+	</update>
+</mapper>

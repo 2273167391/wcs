@@ -1,0 +1,80 @@
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'west',border:false" style="width:600px" class="wcs_main_content">
+    	<table id="wcs_role_list" class="easyui-datagrid" data-options="rownumbers:true,
+                    singleSelect:true,
+                    autoRowHeight:false,
+                    fitColumns:true,
+                    striped:true,
+                    pagination:true,
+                    pageSize:30,
+                    toolbar:roleToolBar,fit:true">
+            <thead>
+           <tr>
+           		<th data-options="field:'roleId',hidden:true">角色ID</th>
+                <th data-options="field:'roleName',halign:'center'" width="10%">角色名称</th>
+                <th data-options="field:'roleTypeName',halign:'center'" width="10%">角色类型</th>
+                <th data-options="field:'description',halign:'center'" width="10%">描述</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    
+    <div data-options="region:'center',border:false" class="wcs_main_content">
+        <table id="wcs_emp_list" class="easyui-datagrid" data-options="rownumbers:true,
+                    singleSelect:true,
+                    autoRowHeight:false,
+                    fitColumns:true,
+                    striped:true,
+                    pagination:true,
+                    pageSize:30,
+                    toolbar:empToolBar,fit:true">
+            <thead>
+            <tr>
+            	<th data-options="field:'empId',halign:'center'">职员ID</th>
+                <th data-options="field:'empCode',halign:'center'" width="10%">职员编码</th>
+                <th data-options="field:'account',halign:'center'" width="10%">账户名</th>
+                <th data-options="field:'trueName',halign:'center'" width="10%">姓名</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<!-- 分配用户角色弹出层 -->
+<div id="wcs_emp_role">
+	<table id="wcs_emp_role_list" class="easyui-datagrid" data-options="rownumbers:true,
+                singleSelect:true,
+                autoRowHeight:false,
+                fitColumns:true,
+                striped:true,
+                pagination:true,
+                pageSize:30,toolbar:empRoleToolBar,fit:true,border:false">
+        <thead>
+        <tr>
+        	<th data-options="field:'empId',halign:'center'">职员ID</th>
+            <th data-options="field:'empCode',halign:'center'" width="10%">职员编码</th>
+            <th data-options="field:'account',halign:'center'" width="10%">账户名</th>
+            <th data-options="field:'trueName',halign:'center'" width="10%">姓名</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+
+<!-- 添加角色窗口 -->
+<div id="wcs_handler_role">
+	<form id="wcs_role_form" method="post">
+		<div class="wcs_form_block">
+			<label>角色名称：</label>
+			<input type="hidden" value="0" name="roleId"/>
+			<input type="text" class="easyui-validatebox" name="roleName" data-options="required:true"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>角色类型：</label>
+			<select id="wcs_role_type" class="easyui-combobox" style="width:200px;height:25px;" name="roleTypeId" data-options="required:true"></select>
+		</div>
+		<div class="wcs_form_block">
+			<label>描述：</label>
+			<textarea class="easyui-validatebox" rows="3" cols="50" name="description"></textarea>
+		</div>
+	</form>
+</div>
+<script type="text/javascript" src="../resources/js/sys/role_manager.js"></script>

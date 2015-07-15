@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.view.RoleVMapper">
+	<!-- 结果集 -->
+	<resultMap type="roleV" id="RoleV">
+		<id column="role_id" property="roleId"/>
+		<result column="role_name" property="roleName"/>
+		<result column="role_type_id" property="roleTypeId"/>
+		<result column="roletype_code" property="roleTypeCode"/>
+		<result column="roletype_name" property="roleTypeName"/>
+		<result column="description" property="description"/>
+	</resultMap>
+	<!-- 所有字段 -->
+	<sql id="allColumn">
+		role_id,role_name,role_type_id,roletype_code,roletype_name,description
+	</sql>
+	
+	<!-- 视图名 -->
+	<sql id="viewName">wcs_sys_role_v</sql>
+	
+	<!-- 获取所有角色 -->
+	<select id="queryRoleVAll" resultMap="RoleV">
+		select <include refid="allColumn"/> from <include refid="viewName"/>
+	</select>
+	
+	<!-- 根据类型ID获取角色 -->
+	<select id="queryRoleByTypeId" parameterType="int" resultMap="RoleV">
+		select <include refid="allColumn"/> from <include refid="viewName"/>
+		<where>role_type_id=#{roleTypeId}</where>
+	</select>
+	
+	<!-- 根据角色ID获取角色类型 -->
+	<select id="getRoleTypeById" parameterType="int" resultType="String">
+		select roletype_code from <include refid="viewName"/>
+		<where>role_id=#{roleId}</where>
+	</select>
+</mapper>

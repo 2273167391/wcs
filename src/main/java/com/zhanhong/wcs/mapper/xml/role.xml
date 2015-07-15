@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.RoleMapper">
+	<!-- 结果集 -->
+	<resultMap type="role" id="Role">
+		<id column="role_id" property="roleId"/>
+		<result column="role_name" property="roleName"/>
+		<result column="role_type_id" property="roleTypeId"/>
+		<result column="description" property="description"/>
+		<result column="version" property="version"/>
+		<result column="creation_by" property="creationBy"/>
+		<result column="creation_date" property="creationDate"/>
+		<result column="last_update_by" property="lastUpdateBy"/>
+		<result column="last_update_date" property="lastUpdateDate"/>
+	</resultMap>
+
+	<!-- 添加字段 -->
+	<sql id="addColumn">
+		role_id,role_name,role_type_id,description,version,creation_by,creation_date
+	</sql>
+	
+	<!-- 所有字段 -->
+	<sql id="allColumn">
+		<include refid="addColumn"/>,last_update_by,last_update_date
+	</sql>
+	
+	<!-- 表名 -->
+	<sql id="tableName">wcs_sys_role</sql>
+	
+	<!-- 添加角色 -->
+	<insert id="addRole" parameterType="role">
+		insert into <include refid="tableName"/>(<include refid="addColumn"/>)
+		values(wcs_sys_role_s.nextval,#{roleName},#{roleTypeId},
+		<choose>
+			<when test="description!=null">#{description}</when>
+			<otherwise>null</otherwise>
+		</choose>,#{version},#{creationBy},#{creationDate})
+	</insert>
+	
+	<!-- 修改角色 -->
+	<update id="updateRole" parameterType="role">
+		update <include refid="tableName"/> 
+		<set>
+			<if test="roleName!=null">
+				role_name=#{roleName}
+			</if>
+			<if test="roleTypeId!=null">
+				,role_type_id=#{roleTypeId}
+			</if>
+			<if test="description!=null">
+				,description=#{description}
+			</if>
+			,last_update_by=#{lastUpdateBy}
+			,last_update_date=#{lastUpdateDate}
+		</set>
+		<where>
+			role_id=#{roleId}
+		</where>
+	</update>
+	
+	<!-- 删除角色 -->
+	<delete id="deleteRole" parameterType="int">
+		delete from <include refid="tableName"/> where role_id=#{roleId}
+	</delete>
+	
+	<!-- 根据职员ID查询角色 -->
+	<select id="queryRoleByEmpId" parameterType="int" resultMap="Role">
+		select r.* from wcs_sys_role r
+		left join wcs_sys_employee_role mr on r.role_id=mr.role_id
+		where mr.emp_id=#{empId}
+	</select>
+	
+	<!-- 根据角色ID获取角色 -->
+	<select id="queryRoleById" parameterType="int" resultMap="Role">
+		select <include refid="allColumn"/> from <include refid="tableName"/>
+		<where>role_id=#{roleId}</where>
+	</select>
+	
+	<!-- 获取所有角色 -->
+	<select id="queryRoleList" resultMap="Role">
+		select <include refid="allColumn"/> from <include refid="tableName"/>
+	</select>
+	
+	<!-- 根据角色名获取角色 -->
+	<select id="queryRoleByName" parameterType="String" resultMap="Role">
+		select <include refid="allColumn"/> from <include refid="tableName"/>
+		<where>role_name=#{roleName}</where>
+	</select>
+	
+</mapper>

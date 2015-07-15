@@ -1,0 +1,88 @@
+<div class="easyui-layout" data-options="fit:true">
+	<div data-options="region:'north',border:false">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'north',border:false" style="text-align:right;padding:2px 10px 0px 0px">
+				<a href="javascript:queryCopyMeter()" data-options="iconCls:'icon-search',plain:true" class="easyui-linkbutton">查询</a>
+				<a href="javascript:addCopyMeter()" data-options="iconCls:'icon-add',plain:true" class="easyui-linkbutton">新增</a>
+				<a href="#" onclick="deleteCopyMeter()" id="dele_copy_meter" data-options="iconCls:'icon-cancel',plain:true" class="easyui-linkbutton">删除</a>
+			</div>
+			<div data-options="region:'center',border:false" style="border-top:1px solid #d3d3d3;padding:10px 10px;">
+				<form id="wcs_copy_meter_search_form" method="post">
+					<table style="width: 100%" >
+						<tr>
+							<td align="right">水表编码：</td>
+							<td><select class="easyui-combobox wcs_meter_code" style="width:200px;height:25px;" name="waterMeterId"></select></td>
+							<td align="right">抄表人员：</td>
+							<td><select class="easyui-combobox wcs_handler" style="width:200px;height:25px;" name="copyMeterEmpId"></select></td>
+							<td align="right">抄表日期：</td>
+							<td><input type="text" class="easyui-datebox start_copy_date" name="handlerDate"/></td>
+							<td align="right">到：</td>
+							<td><input type="text" class="easyui-datebox end_copy_date" name="endHandlerDate"/></td>
+						</tr>
+						<tr>
+							<td align="right">用户：</td>
+							<td><select class="easyui-combobox wcs_user" style="width:200px;height:25px;" name="userId"></select></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div data-options="region:'center',border:false" style="border-top:1px solid #d3d3d3">
+		<table class="easyui-datagrid wcs_copy_meter_list" data-options="rownumbers:true,
+                    singleSelect:true,
+                    autoRowHeight:false,
+                    striped:true,
+                    pagination:true,
+                    pageSize:30,fit:true,border:false">
+            <thead>
+	           <tr>
+	           		<th data-options="filed:'copyMeterId',hidden:true">抄表ID</th>
+	           		<th data-options="field:'waterMeterCode',halign:'center'" width="100px">水表编码</th>
+	                <th data-options="field:'startNumber',halign:'center'" width="100px">起数</th>
+	                <th data-options="field:'endNumber',halign:'center'" width="100px">止数</th>
+	                <th data-options="field:'definiteNumber',halign:'center'" width="100px">实用数量</th>
+	                <th data-options="field:'price',halign:'center'" width="100px">水价</th>
+	                <th data-options="field:'money',halign:'center'" width="100px">金额</th>
+	                <th data-options="field:'copyMeterName',halign:'center'" width="100px">抄表人员</th>
+	                <th data-options="field:'handlerDate',halign:'center'" width="150px">抄表时间</th>
+	                <th data-options="field:'userName',halign:'center'" width="100px">用户</th>
+	                <th data-options="field:'remarks',halign:'center'" width="200px">备注</th>
+	            </tr>
+            </thead>
+        </table>
+	</div>
+</div>
+<div id="wcs_save_copy_meter_win">
+	<form class="wcs_save_water_meter_form" method="post">
+		<div class="wcs_form_block">
+			<label>水表编码：</label>
+			<input type="hidden" name="copyMeterId"/>
+			<select class="easyui-combobox wcs_meter_code" style="width:200px;height:25px;" name="waterMeterId" required="required"></select>
+		</div>
+		<div class="wcs_form_block">
+			<label>起数：</label>
+			<input type="text" class="start_number" readonly="readonly" name="startNumber"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>止数：</label>
+			<input type="text" class="end_number" required="required" name="endNumber" />
+		</div>
+		<div class="wcs_form_block">
+			<label>实用数：</label>
+			<input type="text" class="definite_number" name="definiteNumber" readonly="readonly"/>
+		</div>
+		<div class="wcs_form_block">
+			<label>水价类别：</label>
+			<select class="easyui-combobox wcs_water_price_type" style="width:200px;height:25px;" name="waterPriceType" required="required"></select>
+		</div>
+		<div class="wcs_form_block">
+			<label>抄表人员：</label>
+			<select class="easyui-combobox wcs_handler" style="width:200px;height:25px;" name="empId" required="required"></select>
+		</div>
+	</form>
+</div>
+<script type="text/javascript" src="../resources/js/cost/copy_meter_notes.js"></script>
+<script type="text/javascript">
+	loadPage();
+</script>

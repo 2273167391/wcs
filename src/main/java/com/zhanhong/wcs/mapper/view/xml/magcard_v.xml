@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.view.MagcardVMapper">
+	<!-- 结果集 -->
+	<resultMap type="magcardV" id="MagcardV">
+		<id column="magcard_id" property="magcardId"/>
+		<result column="card_number" property="cardNumber"/>
+		<result column="amount" property="amount"/>
+		<result column="user_id" property="userId"/>
+		<result column="user_name" property="userName"/>
+		<result column="status_code" property="statusCode"/>
+		<result column="status" property="status"/>
+		<result column="creation_by" property="creationBy"/>
+		<result column="creation_name" property="creationName"/>
+		<result column="creation_date" property="creationDate"/>
+		<result column="last_update_by" property="lastUpdateBy"/>
+		<result column="last_update_name" property="lastUpdateName"/>
+		<result column="last_update_date" property="lastUpdateDate"/>
+	</resultMap>
+	
+	<!-- 所有字段 -->
+	<sql id="allColumn">
+		magcard_id,card_number,amount,user_id,user_name,status_code,status,creation_by,creation_name,creation_date,last_update_by,last_update_name,last_update_date
+	</sql>
+	
+	<!-- 获取所有磁卡信息 -->
+	<select id="queryMagcardVAll" parameterType="magcardV" resultMap="MagcardV">
+		select <include refid="allColumn"/> from wcs_use_magcard_v
+		<where>
+			1=1
+			<if test="cardNumber!=null and cardNumber!=''">
+				 and card_number like upper(#{cardNumber})
+			</if>
+			<if test="userId!=null">
+				and user_id=#{userId}
+			</if>
+			<if test="statusCode!=null and statusCode!=''">
+				 and status_code=#{statusCode}
+			</if>
+			<if test="creationBy!=null">
+				and creation_by=#{creationBy}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据用户ID获取磁卡信息 -->
+	<select id="queryMagcardVByUserId" parameterType="int" resultMap="MagcardV">
+		select <include refid="allColumn"/> from wcs_use_magcard_v
+		<where>user_id=#{userId} and status_code!='W004003'</where>
+	</select>
+</mapper>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.view.MaterialVMapper">
+	<!-- 结果集 -->
+	<resultMap type="materialV" id="MaterialV">
+		<id column="material_id" property="materialId"/>
+		<result column="user_id" property="userId"/>
+		<result column="user_name" property="userName"/>
+		<result column="material_code" property="materialCode"/>
+		<result column="material_name" property="materialName"/>
+		<result column="price" property="price"/>
+		<result column="numbers" property="numbers"/>
+		<result column="amount" property="amount"/>
+		<result column="remarks" property="remarks"/>
+		<result column="creation_by" property="creationBy"/>
+		<result column="creation_name" property="creationName"/>
+		<result column="creation_date" property="creationDate"/>
+		<result column="last_update_by" property="lastUpdateBy"/>
+		<result column="last_update_name" property="lastUpdateName"/>
+		<result column="last_update_date" property="lastUpdateDate"/>
+	</resultMap>
+	
+	<!-- 查询所有材料 -->
+	<select id="queryMaterial" parameterType="materialV" resultMap="MaterialV">
+		select * from wcs_use_material_v
+		<where>
+			1=1
+			<if test="userId!=null">
+				and user_id=#{userId}
+			</if>
+			<if test="materialCode!=null and materialCode!=''">
+				and material_code=#{materialCode}
+			</if>
+			<if test="price!=null">
+				and price&gt;=#{price}
+			</if>
+			<if test="endPrice!=null">
+				and price&lt;=#{endPrice}
+			</if>
+		</where>
+		order by creation_date
+	</select>
+	
+	<!-- 根据用户ID查询材料 -->
+	<select id="queryMaterialByUserId" parameterType="int" resultMap="MaterialV">
+		select * from wcs_use_material_v
+		<where>user_id=#{userId}</where>
+	</select>
+</mapper>

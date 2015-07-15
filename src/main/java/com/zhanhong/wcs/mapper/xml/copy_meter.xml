@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.CopyMeterMapper">
+	<!-- 结果集 -->
+	<resultMap type="copyMeter" id="CopyMeter">
+		<id column="copy_meter_id" property="copyMeterId"/>
+		<result column="water_meter_id" property="waterMeterId"/>
+		<result column="handler_date" property="handlerDate"/>
+		<result column="start_number" property="startNumber"/>
+		<result column="end_number" property="endNumber"/>
+		<result column="definite_number" property="definiteNumber"/>
+		<result column="wp_id" property="wpId"/>
+		<result column="emp_id" property="empId"/>
+		<result column="remarks" property="remarks"/>
+		<result column="version" property="version"/>
+		<result column="creation_by" property="creationBy"/>
+		<result column="creation_date" property="creationDate"/>
+		<result column="last_update_by" property="lastUpdateBy"/>
+		<result column="last_update_date" property="lastUpdateDate"/>
+	</resultMap>
+	
+	<!-- 添加字段 -->
+	<sql id="addColumn">
+		copy_meter_id,water_meter_id,handler_date,start_number,end_number,definite_number,wp_id,emp_id,remarks,version,creation_by,creation_date
+	</sql>
+	
+	<!-- 所有字段 -->
+	<sql id="allColumn">
+		<include refid="addColumn"/>,last_update_by,last_update_date
+	</sql>
+	
+	<!-- 表名 -->
+	<sql id="tableName">wcs_cost_copy_meter</sql>
+	
+	<!-- 添加抄表记录行 -->
+	<insert id="addCopyMeter" parameterType="copyMeter">
+		<selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="copyMeterId">
+			select wcs_cost_copy_meter_s.nextval from dual
+		</selectKey>
+		insert into <include refid="tableName"/>(<include refid="addColumn"/>)
+		values(#{copyMeterId},#{waterMeterId},#{handlerDate},#{startNumber},#{endNumber},#{definiteNumber},#{wpId},#{empId},
+		<choose>
+			<when test="remarks!=null and remarks!=''">#{remarks}</when>
+			<otherwise>null</otherwise>
+		</choose>
+		,#{version},#{creationBy},#{creationDate})
+	</insert>
+	
+	<!-- 删除记录 -->
+	<delete id="deleteCopyMeter" parameterType="int">
+		delete from <include refid="tableName"/> where copy_meter_id=#{copyMeterId}
+	</delete>
+	
+	<!-- 根据ID获取记录 -->
+	<select id="queryCopyMeterById" parameterType="int" resultMap="CopyMeter">
+		select <include refid="allColumn"/> from <include refid="tableName"/>
+		<where>copy_meter_id=#{copyMeterId}</where>
+	</select>
+</mapper>

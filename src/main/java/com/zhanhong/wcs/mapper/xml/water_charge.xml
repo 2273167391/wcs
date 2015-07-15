@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanhong.wcs.mapper.WaterChargeMapper">
+	<!-- 结果集 -->
+	<resultMap type="waterCharge" id="WaterCharge">
+		<id column="charge_id" property="chargeId"/>
+		<result column="charge_code" property="chargeCode"/>
+		<result column="user_id" property="userId"/>
+		<result column="current_month_money" property="currentMonthMoney"/>
+		<result column="real_price" property="realPrice"/>
+		<result column="change_money" property="changeMoney"/>
+		<result column="charge_type" property="chargeType"/>
+		<result column="charge_status" property="chargeStatus"/>
+		<result column="remarks" property="remarks"/>
+		<result column="version" property="version"/>
+		<result column="charge_emp_id" property="chargeEmpId"/>
+		<result column="charge_date" property="chargeDate"/>
+		<result column="creation_by" property="creationBy"/>
+		<result column="creation_date" property="creationDate"/>
+		<result column="last_update_by" property="lastUpdateBy"/>
+		<result column="last_update_date" property="lastUpdateDate"/>
+	</resultMap>
+	<!-- 添加字段 -->
+	<sql id="addColumn">
+		charge_id,charge_code,copy_meter_id,current_month_money,real_price,change_money,charge_type,charge_status,remarks,version,creation_by,creation_date
+	</sql>
+	
+	<!-- 所有字段 -->
+	<sql id="allColumn">
+		<include refid="addColumn"/>,last_update_by,last_update_date
+	</sql>
+	
+	<!-- 表名 -->
+	<sql id="tableName">wcs_cost_water_charge</sql>
+	
+	<!-- 添加收费记录 -->
+	<insert id="addWaterCharge" parameterType="waterCharge">
+		insert into <include refid="tableName"/>(<include refid="addColumn"/>)
+		values(wcs_cost_water_charge_s.nextval,#{chargeCode},#{copyMeterId},#{currentMonthMoney},
+		<choose>
+			<when test="realPrice!=null">#{realPrice}</when>
+			<otherwise>null</otherwise>
+		</choose>,
+		<choose>
+			<when test="changeMoney!=null">#{changeMoney}</when>
+			<otherwise>null</otherwise>
+		</choose>,
+		<choose>
+			<when test="chargeType!=null">#{chargeType}</when>
+			<otherwise>null</otherwise>
+		</choose>,#{chargeStatus},
+		<choose>
+			<when test="remarks!=null">#{remarks}</when>
+			<otherwise>null</otherwise>
+		</choose>,#{version},#{creationBy},#{creationDate})
+	</insert>
+	
+	<!-- 更新收费记录 -->
+	<update id="updateWaterCharge" parameterType="waterCharge">
+		update <include refid="tableName"/>
+		<set>
+			real_price=#{realPrice},change_money=#{changeMoney},charge_status=#{chargeStatus},charge_type=#{chargeType},
+			<if test="remarks!=null">remarks=#{remarks},</if>
+			charge_emp_id=#{chargeEmpId},charge_date=#{chargeDate},last_update_by=#{lastUpdateBy},last_update_date=#{lastUpdateDate}
+		</set>
+		<where>charge_id=#{chargeId}</where>
+	</update>
+	
+	<!-- 删除收费记录 -->
+	<delete id="deleteWaterCharge" parameterType="int">
+		delete from <include refid="tableName"/> where charge_id=#{chargeId}
+	</delete>
+	
+	<!--  -->
+	<delete id="deleteWaterChargeByCopyMeterID" parameterType="int">
+		delete from <include refid="tableName"/> where copy_meter_id=#{copyMeterId}
+	</delete>
+	
+	<!-- 根据收费编码查询收费记录 -->
+	<select id="queryWaterChargeByCode" parameterType="String" resultMap="WaterCharge">
+		select <include refid="allColumn"/> from <include refid="tableName"/>
+		<where>charge_code=#{chargeCode}</where>
+	</select>
+</mapper>
