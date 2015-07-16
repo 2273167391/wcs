@@ -153,7 +153,7 @@
 	<!-- 修改职员密码 -->
 	<update id="updateEmpPwd" parameterType="Map">
 		update <include refid="tableName"/>
-		<set>password=#{password}</set>
+		<set>password=#{password},password_change_date=#{updateDate}</set>
 		<where>emp_id=#{empId}</where>
 	</update>
 	

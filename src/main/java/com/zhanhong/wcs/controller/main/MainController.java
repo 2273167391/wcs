@@ -1,5 +1,6 @@
 package com.zhanhong.wcs.controller.main;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,7 @@ public class MainController {
 			Map<String, Object> map=new HashMap<String, Object>();
 			map.put("password", MD5.getPwdCode(employee.getAccount(), newPwd));
 			map.put("empId", employee.getEmpId());
+			map.put("updateDate", new Date());
 			return employeeService.updateEmpPwd(map);
 		}else{
 			return JsonMessageUtil.errorMessaage("原密码错误，修改失败！");
